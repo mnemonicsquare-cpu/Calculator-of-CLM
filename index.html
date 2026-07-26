@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Калькулятор CLM</title>
     <style>
         :root {
@@ -67,9 +67,11 @@
             --pill-border: #475569;
         }
 
-        * { 
-            box-sizing: border-box; margin: 0; padding: 0; 
-            min-width: 0; 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            min-width: 0;
         }
         html, body {
             max-width: 100vw;
@@ -87,14 +89,18 @@
             transition: background 0.3s, color 0.3s;
             -webkit-tap-highlight-color: transparent;
         }
-        .app { 
-            max-width: 960px; 
-            width: 100%; 
-            display: flex; 
-            flex-direction: column; 
+        .app {
+            max-width: 960px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
             gap: 1.8rem;
         }
-        .screen { display: flex; flex-direction: column; gap: 1.8rem; }
+        .screen {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
         .card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -162,10 +168,14 @@
 
         .counters { display: flex; flex-wrap: wrap; gap: 1rem; }
         .counter-item {
-            flex: 1 1 100px; min-width: 0;
-            background: var(--counter-bg); border-radius: 14px;
-            padding: 1rem 0.8rem; text-align: center;
-            border: 1px solid transparent; transition: background 0.3s, color 0.3s;
+            flex: 1 1 100px;
+            min-width: 0;
+            background: var(--counter-bg);
+            border-radius: 14px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: background 0.3s, color 0.3s;
         }
         .counter-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.04em; }
         .counter-value { font-size: 2rem; font-weight: 700; line-height: 1.2; }
@@ -194,9 +204,10 @@
             border: 1px solid var(--border); border-radius: 10px;
             padding: 0.7rem 0.9rem; font-size: 0.95rem; font-family: inherit; transition: 0.2s;
             background: var(--input-bg); color: var(--text);
-            width: 100%; max-width: 100%;
+            width: 100%;
             min-width: 0;
         }
+        input[type="number"]:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,107,53,0.3); }
         .error-text { color: #EF4444; font-size: 0.8rem; margin-top: 0.3rem; display: none; }
 
         .btn {
@@ -224,7 +235,10 @@
             transition: background 0.15s; border-radius: 8px; overflow: hidden;
         }
         .slide-row:hover { background: var(--slide-hover); }
-        .slide-content { flex: 1; min-width: 0; padding: 0 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; word-break: break-word; }
+        .slide-content {
+            flex: 1; min-width: 0; padding: 0 0.5rem;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; word-break: break-word;
+        }
         .slide-actions { display: flex; gap: 0.3rem; flex-shrink: 0; margin-right: 0.5rem; }
         .slide-actions .btn { padding: 0.4rem 0.8rem; min-height: auto; }
 
@@ -244,7 +258,6 @@
             border-bottom: 1px solid var(--table-border);
             padding: 0.6rem 0;
             word-break: break-word;
-            min-width: 0;
         }
         .time-grid .grid-value { text-align: right; font-weight: 500; }
 
@@ -265,10 +278,6 @@
             font-weight: 500; border: none; background: transparent; width: 100%; padding: 0.2rem 0.3rem;
             border-bottom: 1px dashed var(--border); color: var(--text);
         }
-        .inline-number {
-            width: 60px;
-            display: inline-block;
-        }
 
         .distribute-row {
             display: flex;
@@ -281,6 +290,16 @@
             width: 1.1rem;
             height: 1.1rem;
             flex-shrink: 0;
+        }
+
+        .time-input-group {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+        .time-input-group input {
+            width: 60px;
+            min-width: 0;
         }
 
         .modal-overlay {
@@ -296,7 +315,9 @@
             position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.5rem;
             cursor:pointer; color: var(--text-secondary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
         }
-        .modal-scroll { max-height: 70vh; overflow-y: auto; padding-right: 0.5rem; word-break: break-word; }
+        .modal-scroll {
+            max-height: 70vh; overflow-y: auto; padding-right: 0.5rem; word-break: break-word;
+        }
         .modal-scroll ul, .modal-scroll ol { padding-left: 1.5rem; margin: 0.5rem 0; }
         .modal-scroll li { margin-bottom: 0.3rem; }
 
@@ -317,10 +338,16 @@
                 grid-template-columns: 1fr auto;
                 gap: 0.2rem 0.5rem;
             }
-            .inline-number { width: 100%; }
+            .time-input-group input {
+                width: auto;
+                flex: 1;
+            }
             .special-name-input { width: 100%; }
             .modal-box { width: 100%; max-width: 100%; border-radius: 16px 16px 0 0; position: fixed; bottom: 0; left: 0; margin: 0; }
             .modal-box.wide { max-width: 100%; }
+            input[type="number"], input[type="text"] {
+                font-size: 16px !important;
+            }
         }
     </style>
 </head>
@@ -329,12 +356,17 @@
     <!-- Экран 1 -->
     <div id="screen1" class="screen">
         <div class="screen-header">
-            <div class="header-left"><button class="help-btn" id="helpBtn" title="Инструкция">?</button></div>
+            <div class="header-left">
+                <button class="help-btn" id="helpBtn" title="Инструкция">?</button>
+            </div>
             <div class="header-center">Калькулятор CLM</div>
             <div class="header-right">
                 <div class="theme-toggle-container">
                     <span>☀️</span>
-                    <label class="theme-toggle" for="themeCheckbox1"><input type="checkbox" id="themeCheckbox1"><span class="slider"></span></label>
+                    <label class="theme-toggle" for="themeCheckbox1">
+                        <input type="checkbox" id="themeCheckbox1">
+                        <span class="slider"></span>
+                    </label>
                     <span>🌙</span>
                 </div>
             </div>
@@ -350,35 +382,60 @@
         <div class="card" id="assessmentCard">
             <h2 id="formTitle">📝 Оценка слайда №1</h2>
             <div id="questionsContainer">
-                <div class="form-group"><label>Название слайда</label><input type="text" id="slideNameInput" value="Слайд брифа 1" placeholder="Название слайда"></div>
+                <div class="form-group">
+                    <label>Название слайда</label>
+                    <input type="text" id="slideNameInput" value="Слайд брифа 1" placeholder="Название слайда">
+                </div>
                 <div class="form-group">
                     <label>1. Количество видов слайда</label>
                     <div class="radio-group" id="viewCountGroup">
-                        <input type="radio" name="viewCount" value="1" id="vc1" class="radio-input" checked><label for="vc1" class="pill-radio">1</label>
-                        <input type="radio" name="viewCount" value="2" id="vc2" class="radio-input"><label for="vc2" class="pill-radio">2</label>
-                        <input type="radio" name="viewCount" value="3-4" id="vc34" class="radio-input"><label for="vc34" class="pill-radio">3–4</label>
-                        <input type="radio" name="viewCount" value="5+" id="vc5" class="radio-input"><label for="vc5" class="pill-radio">5 и более</label>
+                        <input type="radio" name="viewCount" value="1" id="vc1" class="radio-input" checked>
+                        <label for="vc1" class="pill-radio">1</label>
+                        <input type="radio" name="viewCount" value="2" id="vc2" class="radio-input">
+                        <label for="vc2" class="pill-radio">2</label>
+                        <input type="radio" name="viewCount" value="3-4" id="vc34" class="radio-input">
+                        <label for="vc34" class="pill-radio">3–4</label>
+                        <input type="radio" name="viewCount" value="5+" id="vc5" class="radio-input">
+                        <label for="vc5" class="pill-radio">5 и более</label>
                     </div>
-                    <div id="exactCountWrapper" style="display: none; margin-top: 0.6rem;"><input type="number" id="exactCount" min="5" value="5" placeholder="Точное число видов"><span class="error-text" id="exactCountError">Введите целое число ≥ 5</span></div>
+                    <div id="exactCountWrapper" style="display: none; margin-top: 0.6rem;">
+                        <input type="number" id="exactCount" min="5" value="5" placeholder="Точное число видов">
+                        <span class="error-text" id="exactCountError">Введите целое число ≥ 5</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>2. Анимация</label>
                     <div class="radio-group" id="animGroup">
-                        <input type="radio" name="animation" value="none" id="anone" class="radio-input" checked><label for="anone" class="pill-radio">Нет</label>
-                        <input type="radio" name="animation" value="simple" id="ansimple" class="radio-input"><label for="ansimple" class="pill-radio">Простая</label>
-                        <input type="radio" name="animation" value="complex" id="ancomplex" class="radio-input"><label for="ancomplex" class="pill-radio">Сложная</label>
+                        <input type="radio" name="animation" value="none" id="anone" class="radio-input" checked>
+                        <label for="anone" class="pill-radio">Нет</label>
+                        <input type="radio" name="animation" value="simple" id="ansimple" class="radio-input">
+                        <label for="ansimple" class="pill-radio">Простая</label>
+                        <input type="radio" name="animation" value="complex" id="ancomplex" class="radio-input">
+                        <label for="ancomplex" class="pill-radio">Сложная</label>
                     </div>
-                    <div id="simpleAnimWrapper" style="display: none; margin-top: 0.5rem;"><input type="number" id="simpleAnimCount" min="0" value="0" placeholder="На скольких видах простая анимация?"><span class="error-text" id="simpleAnimError">Не может превышать общее число видов</span></div>
-                    <div id="complexAnimWrapper" style="display: none; margin-top: 0.5rem;"><input type="number" id="complexAnimCount" min="0" value="0" placeholder="На скольких видах сложная анимация?"><span class="error-text" id="complexAnimError">Не может превышать общее число видов</span></div>
+                    <div id="simpleAnimWrapper" style="display: none; margin-top: 0.5rem;">
+                        <input type="number" id="simpleAnimCount" min="0" value="0" placeholder="На скольких видах простая анимация?">
+                        <span class="error-text" id="simpleAnimError">Не может превышать общее число видов</span>
+                    </div>
+                    <div id="complexAnimWrapper" style="display: none; margin-top: 0.5rem;">
+                        <input type="number" id="complexAnimCount" min="0" value="0" placeholder="На скольких видах сложная анимация?">
+                        <span class="error-text" id="complexAnimError">Не может превышать общее число видов</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>3. Механика</label>
                     <div class="radio-group" id="mechGroup">
-                        <input type="radio" name="mechanics" value="none" id="mcnone" class="radio-input" checked><label for="mcnone" class="pill-radio">Нет</label>
-                        <input type="radio" name="mechanics" value="simple" id="mcsimple" class="radio-input"><label for="mcsimple" class="pill-radio">Простая</label>
-                        <input type="radio" name="mechanics" value="complex" id="mccomplex" class="radio-input"><label for="mccomplex" class="pill-radio">Сложная</label>
+                        <input type="radio" name="mechanics" value="none" id="mcnone" class="radio-input" checked>
+                        <label for="mcnone" class="pill-radio">Нет</label>
+                        <input type="radio" name="mechanics" value="simple" id="mcsimple" class="radio-input">
+                        <label for="mcsimple" class="pill-radio">Простая</label>
+                        <input type="radio" name="mechanics" value="complex" id="mccomplex" class="radio-input">
+                        <label for="mccomplex" class="pill-radio">Сложная</label>
                     </div>
-                    <div id="simpleMechWrapper" style="display: none; margin-top: 0.5rem;"><input type="number" id="simpleMechCount" min="0" value="0" placeholder="На скольких видах простая механика?"><span class="error-text" id="simpleMechError">Не может превышать общее число видов</span></div>
+                    <div id="simpleMechWrapper" style="display: none; margin-top: 0.5rem;">
+                        <input type="number" id="simpleMechCount" min="0" value="0" placeholder="На скольких видах простая механика?">
+                        <span class="error-text" id="simpleMechError">Не может превышать общее число видов</span>
+                    </div>
                 </div>
                 <div class="result-block" id="calcResultBlock" style="display: none;"></div>
                 <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;">
@@ -404,7 +461,10 @@
                 <h2 style="margin:0;">⏱️ Расчёт времени</h2>
                 <div class="theme-toggle-container">
                     <span>☀️</span>
-                    <label class="theme-toggle" for="themeCheckbox2"><input type="checkbox" id="themeCheckbox2"><span class="slider"></span></label>
+                    <label class="theme-toggle" for="themeCheckbox2">
+                        <input type="checkbox" id="themeCheckbox2">
+                        <span class="slider"></span>
+                    </label>
                     <span>🌙</span>
                 </div>
             </div>
@@ -417,21 +477,108 @@
     </div>
 </div>
 
-<!-- Модальные окна без изменений -->
-<div id="helpModal" class="modal-overlay hidden"><div class="modal-box wide" style="position:relative;"><button class="modal-close" id="closeHelpModal">&times;</button><h2 style="margin-bottom:1rem;">📘 Инструкция</h2><div class="modal-scroll" style="max-height: 65vh;"><p><strong>Для чего нужно приложение</strong></p><p>Этот инструмент помогает:</p><ul><li>Оценить, насколько сложен каждый слайд будущей CLM-презентации.</li><li>Спрогнозировать, сколько времени потребуется на создание прототипа всей презентации.</li></ul><p>Вы последовательно оцениваете слайды, получаете итоговые цифры по простым, средним, сложным и особым слайдам, а затем указываете дополнительные временные факторы и получаете реалистичную оценку трудозатрат в часах и минутах.</p><p>Термин <strong>«Особый слайд»</strong> используется для слайдов, к которым не удается применить обычную классификацию по сложности. Обычно такие слайды содержат сложные механики. Предполагаемое количество времени для создания прототипа каждого особого слайда предлагается указывать отдельно.</p><hr><h3>Экран 1 — Оценка сложности слайдов</h3><p><strong>Верхние счётчики</strong><br>В самом верху вы видите четыре цветных блока: <strong>Простые</strong>, <strong>Средние</strong>, <strong>Сложные</strong>, <strong>Особые</strong>. Числа в них показывают, сколько слайдов каждого типа вы уже оценили. Они обновляются автоматически при каждом добавлении, изменении или удалении слайда.</p><p><strong>Карточка оценки слайда</strong></p><ol><li><strong>Название слайда</strong> — Вы можете дать слайду понятное имя (например, «Слайд 5 — Механизм действия»). По умолчанию подставляется «Слайд брифа 1», «Слайд брифа 2» и т.д. Название можно редактировать в любой момент.</li><li><strong>Вопросы о слайде</strong> — Для каждого слайда вы отвечаете на три вопроса:<ul><li><strong>Количество видов слайда</strong> — выберите 1, 2, 3–4 или 5 и более. Если выбрано «5 и более», появится поле для точного числа видов.</li><li><strong>Анимация</strong> — Нет / Простая (последовательное появление) / Сложная (механизм действия, перетаскивание). <strong>Важно:</strong> если выбрано «5 и более видов» и указана анимация, появятся поля для количества видов с анимацией.</li><li><strong>Механика</strong> — Нет / Простая (калькулятор, опрос) / Сложная (многоэтапный расчёт). Если механика сложная, слайд сразу считается Особым (почасовая оценка). При простой механике и «5 и более видов» появится поле для количества видов с механикой.</li></ul></li><li><strong>Кнопка «Рассчитать сложность»</strong> — показывает результат: тип слайда или распределение по сложности.</li><li><strong>Добавление слайда</strong> — после расчёта появляется кнопка «Добавить слайд в список». Нажмите её, чтобы сохранить оценку.</li></ol><p><strong>Список оценённых слайдов</strong><br>Ниже находится прокручиваемый список. Каждый слайд можно <strong>редактировать</strong> (иконка карандаша) или <strong>удалить</strong> (крестик). При удалении потребуется подтверждение.</p><p><strong>Переход к расчёту времени</strong> — кнопка «Завершить расчёт сложности слайдов» внизу экрана.</p><hr><h3>Экран 2 — Расчёт времени</h3><p>В верхней части таблица с нормативами и итоговым временем по каждому типу. Особые слайды можно переименовывать и вводить для них индивидуальное время. Отсутствующие типы не отображаются.</p><p><strong>Дополнительные факторы</strong> — блок под таблицей. Изначально содержит фактор «Поиск и анализ информации». Можно добавить неограниченное количество своих факторов, переименовывать их. Для каждого фактора выбирается режим:</p><ul><li><strong>Посчитать отдельно</strong> — время добавляется отдельной строкой. Можно распределить по слайдам (тогда нормативы увеличатся).</li><li><strong>Посчитать на слайд в среднем</strong> — указывается среднее время на слайд, нормативы пересчитываются.</li></ul><p>Все изменения мгновенно влияют на общее время.</p><p><strong>Кнопка «Создать отчёт»</strong> — показывает текстовый отчёт для копирования.</p><p><strong>Кнопка «Завершить расчёты»</strong> — сбрасывает все данные и возвращает к началу.</p><p><strong>Кнопка «Назад»</strong> — возвращает к списку слайдов.</p><hr><p><strong>Тёмная тема</strong> — переключатель в верхней части каждого экрана.</p></div></div></div>
-<div id="deleteSlideModal" class="modal-overlay hidden"><div class="modal-box"><button class="modal-close" id="closeDeleteSlideModal">&times;</button><p>Вы уверены, что хотите удалить этот слайд?</p><button class="btn btn-accent" id="confirmDeleteSlideBtn" style="margin-top:1.5rem;">Да</button></div></div>
-<div id="resetModal" class="modal-overlay hidden"><div class="modal-box"><button class="modal-close" id="closeResetModal">&times;</button><p>Вы уверены? Данные о расчётах будут удалены.</p><button class="btn btn-accent" id="confirmResetBtn" style="margin-top:1.5rem;">Да</button></div></div>
-<div id="confirmModal" class="modal-overlay hidden"><div class="modal-box"><p id="confirmMessage"></p><div style="display: flex; gap: 0.8rem; justify-content: center; margin-top: 1.4rem; flex-wrap: wrap;"><button class="btn btn-accent" id="confirmSave">💾 Сохранить и перейти</button><button class="btn btn-outline" id="confirmDiscard">🗑️ Не сохранять</button><button class="btn btn-outline" id="confirmCancel">↩️ Отмена</button></div></div></div>
-<div id="reportModal" class="modal-overlay hidden"><div class="modal-box" style="position:relative; max-width:600px; text-align:left;"><button class="modal-close" id="closeReportBtn">&times;</button><h2 style="margin-bottom:1rem;">📄 Отчёт по времени</h2><pre id="reportText" style="white-space: pre-wrap; font-family: inherit; font-size:0.95rem; background:var(--factor-bg); padding:1rem; border-radius:12px; color:var(--text);"></pre></div></div>
+<!-- Модальные окна -->
+<div id="helpModal" class="modal-overlay hidden">
+    <div class="modal-box wide" style="position:relative;">
+        <button class="modal-close" id="closeHelpModal">&times;</button>
+        <h2 style="margin-bottom:1rem;">📘 Инструкция</h2>
+        <div class="modal-scroll" style="max-height: 65vh;">
+            <p><strong>Для чего нужно приложение</strong></p>
+            <p>Этот инструмент помогает:</p>
+            <ul>
+                <li>Оценить, насколько сложен каждый слайд будущей CLM-презентации.</li>
+                <li>Спрогнозировать, сколько времени потребуется на создание прототипа всей презентации.</li>
+            </ul>
+            <p>Вы последовательно оцениваете слайды, получаете итоговые цифры по простым, средним, сложным и особым слайдам, а затем указываете дополнительные временные факторы и получаете реалистичную оценку трудозатрат в часах и минутах.</p>
+            <p>Термин <strong>«Особый слайд»</strong> используется для слайдов, к которым не удается применить обычную классификацию по сложности. Обычно такие слайды содержат сложные механики. Предполагаемое количество времени для создания прототипа каждого особого слайда предлагается указывать отдельно.</p>
+            <hr>
+            <h3>Экран 1 — Оценка сложности слайдов</h3>
+            <p><strong>Верхние счётчики</strong><br>В самом верху вы видите четыре цветных блока: <strong>Простые</strong>, <strong>Средние</strong>, <strong>Сложные</strong>, <strong>Особые</strong>. Числа в них показывают, сколько слайдов каждого типа вы уже оценили. Они обновляются автоматически при каждом добавлении, изменении или удалении слайда.</p>
+            <p><strong>Карточка оценки слайда</strong></p>
+            <ol>
+                <li><strong>Название слайда</strong> — Вы можете дать слайду понятное имя (например, «Слайд 5 — Механизм действия»). По умолчанию подставляется «Слайд брифа 1», «Слайд брифа 2» и т.д. Название можно редактировать в любой момент.</li>
+                <li><strong>Вопросы о слайде</strong> — Для каждого слайда вы отвечаете на три вопроса:
+                    <ul>
+                        <li><strong>Количество видов слайда</strong> — выберите 1, 2, 3–4 или 5 и более. Если выбрано «5 и более», появится поле для точного числа видов.</li>
+                        <li><strong>Анимация</strong> — Нет / Простая (последовательное появление) / Сложная (механизм действия, перетаскивание). <strong>Важно:</strong> если выбрано «5 и более видов» и указана анимация, появятся поля для количества видов с анимацией.</li>
+                        <li><strong>Механика</strong> — Нет / Простая (калькулятор, опрос) / Сложная (многоэтапный расчёт). Если механика сложная, слайд сразу считается Особым (почасовая оценка). При простой механике и «5 и более видов» появится поле для количества видов с механикой.</li>
+                    </ul>
+                </li>
+                <li><strong>Кнопка «Рассчитать сложность»</strong> — показывает результат: тип слайда или распределение по сложности.</li>
+                <li><strong>Добавление слайда</strong> — после расчёта появляется кнопка «Добавить слайд в список». Нажмите её, чтобы сохранить оценку.</li>
+            </ol>
+            <p><strong>Список оценённых слайдов</strong><br>Ниже находится прокручиваемый список. Каждый слайд можно <strong>редактировать</strong> (иконка карандаша) или <strong>удалить</strong> (крестик). При удалении потребуется подтверждение.</p>
+            <p><strong>Переход к расчёту времени</strong> — кнопка «Завершить расчёт сложности слайдов» внизу экрана.</p>
+            <hr>
+            <h3>Экран 2 — Расчёт времени</h3>
+            <p>В верхней части таблица с нормативами и итоговым временем по каждому типу. Особые слайды можно переименовывать и вводить для них индивидуальное время. Отсутствующие типы не отображаются.</p>
+            <p><strong>Дополнительные факторы</strong> — блок под таблицей. Изначально содержит фактор «Поиск и анализ информации». Можно добавить неограниченное количество своих факторов, переименовывать их. Для каждого фактора выбирается режим:</p>
+            <ul>
+                <li><strong>Посчитать отдельно</strong> — время добавляется отдельной строкой. Можно распределить по слайдам (тогда нормативы увеличатся).</li>
+                <li><strong>Посчитать на слайд в среднем</strong> — указывается среднее время на слайд, нормативы пересчитываются.</li>
+            </ul>
+            <p>Все изменения мгновенно влияют на общее время.</p>
+            <p><strong>Кнопка «Создать отчёт»</strong> — показывает текстовый отчёт для копирования.</p>
+            <p><strong>Кнопка «Завершить расчёты»</strong> — сбрасывает все данные и возвращает к началу.</p>
+            <p><strong>Кнопка «Назад»</strong> — возвращает к списку слайдов.</p>
+            <hr>
+            <p><strong>Тёмная тема</strong> — переключатель в верхней части каждого экрана.</p>
+        </div>
+    </div>
+</div>
+
+<div id="deleteSlideModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <button class="modal-close" id="closeDeleteSlideModal">&times;</button>
+        <p>Вы уверены, что хотите удалить этот слайд?</p>
+        <button class="btn btn-accent" id="confirmDeleteSlideBtn" style="margin-top:1.5rem;">Да</button>
+    </div>
+</div>
+
+<div id="resetModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <button class="modal-close" id="closeResetModal">&times;</button>
+        <p>Вы уверены? Данные о расчётах будут удалены.</p>
+        <button class="btn btn-accent" id="confirmResetBtn" style="margin-top:1.5rem;">Да</button>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <p id="confirmMessage"></p>
+        <div style="display: flex; gap: 0.8rem; justify-content: center; margin-top: 1.4rem; flex-wrap: wrap;">
+            <button class="btn btn-accent" id="confirmSave">💾 Сохранить и перейти</button>
+            <button class="btn btn-outline" id="confirmDiscard">🗑️ Не сохранять</button>
+            <button class="btn btn-outline" id="confirmCancel">↩️ Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div id="reportModal" class="modal-overlay hidden">
+    <div class="modal-box" style="position:relative; max-width:600px; text-align:left;">
+        <button class="modal-close" id="closeReportBtn">&times;</button>
+        <h2 style="margin-bottom:1rem;">📄 Отчёт по времени</h2>
+        <pre id="reportText" style="white-space: pre-wrap; font-family: inherit; font-size:0.95rem; background:var(--factor-bg); padding:1rem; border-radius:12px; color:var(--text);"></pre>
+    </div>
+</div>
 
 <script>
 (function() {
     const appState = {
-        slides: [], nextId: 1, currentResult: null, editingSlideId: null, darkTheme: false, slideToDelete: null,
-        screen2: { simpleTotal: 0, mediumTotal: 0, complexTotal: 0, specialInputs: [], factors: [], factorIdCounter: 1 }
+        slides: [],
+        nextId: 1,
+        currentResult: null,
+        editingSlideId: null,
+        darkTheme: false,
+        slideToDelete: null,
+        screen2: {
+            simpleTotal: 0, mediumTotal: 0, complexTotal: 0,
+            specialInputs: [],
+            factors: [],
+            factorIdCounter: 1
+        }
     };
 
-    // DOM elements
     const screen1 = document.getElementById('screen1');
     const screen2 = document.getElementById('screen2');
     const themeCheck1 = document.getElementById('themeCheckbox1');
@@ -486,7 +633,12 @@
     function getRadioValue(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; }
     function getExactCount() { const v = parseInt(exactCountInput.value,10); return isNaN(v) ? null : v; }
 
-    function applyTheme() { document.body.classList.toggle('dark', appState.darkTheme); themeCheck1.checked = appState.darkTheme; themeCheck2.checked = appState.darkTheme; }
+    function applyTheme() {
+        document.body.classList.toggle('dark', appState.darkTheme);
+        themeCheck1.checked = appState.darkTheme;
+        themeCheck2.checked = appState.darkTheme;
+    }
+
     themeCheck1.addEventListener('change', () => { appState.darkTheme = themeCheck1.checked; applyTheme(); });
     themeCheck2.addEventListener('change', () => { appState.darkTheme = themeCheck2.checked; applyTheme(); });
 
@@ -577,7 +729,13 @@
             if(r.special) desc='Особый (почасовая оценка)';
             else if(r.simple+r.medium+r.complex===1) { if(r.simple) desc='Простой'; else if(r.medium) desc='Средний'; else desc='Сложный'; }
             else desc=`Простые: ${r.simple}, Средние: ${r.medium}, Сложные: ${r.complex}`;
-            html+=`<div class="slide-row" data-id="${sl.id}"><div class="slide-content">${escapeHtml(sl.name)} — ${desc}</div><div class="slide-actions"><button class="btn btn-outline edit-slide-btn" style="padding:0.3rem 0.8rem;">✎</button><button class="btn btn-outline delete-slide-btn" style="padding:0.3rem 0.8rem; color:var(--accent); border-color:var(--accent);">✕</button></div></div>`;
+            html+=`<div class="slide-row" data-id="${sl.id}">
+                <div class="slide-content">${escapeHtml(sl.name)} — ${desc}</div>
+                <div class="slide-actions">
+                    <button class="btn btn-outline edit-slide-btn" style="padding:0.3rem 0.8rem;">✎</button>
+                    <button class="btn btn-outline delete-slide-btn" style="padding:0.3rem 0.8rem; color:var(--accent); border-color:var(--accent);">✕</button>
+                </div>
+            </div>`;
         });
         slideListContainer.innerHTML=html;
         document.querySelectorAll('.slide-row').forEach(row=>{
@@ -686,8 +844,15 @@
         const specialInputs=appState.screen2.specialInputs, factors=appState.screen2.factors;
         let X_total=0; const separateLines=[];
         factors.forEach(factor=>{
-            if(factor.mode==='separate' && !factor.distribute){ const mins=factor.separateHours*60+factor.separateMinutes; if(mins>0) separateLines.push({name:factor.name, minutes:mins}); }
-            else { let T_f=0; if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes; else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes); if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; } }
+            if(factor.mode==='separate' && !factor.distribute){
+                const mins=factor.separateHours*60+factor.separateMinutes;
+                if(mins>0) separateLines.push({name:factor.name, minutes:mins});
+            } else {
+                let T_f=0;
+                if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes;
+                else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes);
+                if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; }
+            }
         });
         const simpleNorm=30+X_total, mediumNorm=45+1.5*X_total, complexNorm=60+2*X_total;
         const simpleTime=Math.round(A*simpleNorm), mediumTime=Math.round(B*mediumNorm), complexTime=Math.round(C*complexNorm);
@@ -729,8 +894,15 @@
         const specialInputs=appState.screen2.specialInputs, factors=appState.screen2.factors;
         let X_total=0; const separateLines=[];
         factors.forEach(factor=>{
-            if(factor.mode==='separate' && !factor.distribute){ const mins=factor.separateHours*60+factor.separateMinutes; if(mins>0) separateLines.push({name:factor.name, minutes:mins}); }
-            else { let T_f=0; if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes; else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes); if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; } }
+            if(factor.mode==='separate' && !factor.distribute){
+                const mins=factor.separateHours*60+factor.separateMinutes;
+                if(mins>0) separateLines.push({name:factor.name, minutes:mins});
+            } else {
+                let T_f=0;
+                if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes;
+                else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes);
+                if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; }
+            }
         });
         const simpleNorm=30+X_total, mediumNorm=45+1.5*X_total, complexNorm=60+2*X_total;
         const simpleTime=Math.round(A*simpleNorm), mediumTime=Math.round(B*mediumNorm), complexTime=Math.round(C*complexNorm);
@@ -744,7 +916,11 @@
         if(C>0) html+=`<div id="formula-complex">Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})</div><div class="grid-value" id="time-complex">= ${formatTimeShort(complexTime)}</div>`;
         specialInputs.forEach((sp,i)=>{
             const spMin=sp.hours*60+sp.minutes;
-            html+=`<div><input type="text" class="special-name-input" data-index="${i}" value="${escapeHtml(sp.name)}"> <input type="number" class="special-hours inline-number" data-index="${i}" value="${sp.hours}" min="0"> ч <input type="number" class="special-minutes inline-number" data-index="${i}" value="${sp.minutes}" min="0" max="59"> мин</div><div class="grid-value" id="time-special-${i}">= ${formatTimeShort(spMin)}</div>`;
+            html+=`<div><input type="text" class="special-name-input" data-index="${i}" value="${escapeHtml(sp.name)}">
+                <div class="time-input-group">
+                    <input type="number" class="special-hours" data-index="${i}" value="${sp.hours}" min="0" placeholder="0"> ч
+                    <input type="number" class="special-minutes" data-index="${i}" value="${sp.minutes}" min="0" max="59" placeholder="0"> мин
+                </div></div><div class="grid-value" id="time-special-${i}">= ${formatTimeShort(spMin)}</div>`;
         });
         separateLines.forEach((line, idx)=>{
             html+=`<div>+ ${escapeHtml(line.name)}</div><div class="grid-value" id="time-separate-${idx}">${formatTimeShort(line.minutes)}</div>`;
@@ -754,10 +930,18 @@
         factors.forEach(factor=>{
             html+=`<div class="factor-card"><input type="text" class="factor-name-input" data-id="${factor.id}" value="${escapeHtml(factor.name)}" placeholder="Название фактора"><div class="radio-group" style="margin:0.8rem 0;"><input type="radio" name="factorMode_${factor.id}" value="separate" id="fmsep_${factor.id}" class="radio-input" ${factor.mode==='separate'?'checked':''}><label for="fmsep_${factor.id}" class="pill-radio">Посчитать отдельно</label><input type="radio" name="factorMode_${factor.id}" value="perSlide" id="fmps_${factor.id}" class="radio-input" ${factor.mode==='perSlide'?'checked':''}><label for="fmps_${factor.id}" class="pill-radio">Посчитать на слайд</label></div>`;
             if(factor.mode==='separate'){
-                html+=`<div><label>Общее время: <input type="number" class="factor-sep-hours inline-number" data-id="${factor.id}" value="${factor.separateHours}" min="0"> ч <input type="number" class="factor-sep-minutes inline-number" data-id="${factor.id}" value="${factor.separateMinutes}" min="0" max="59"> мин</label>
+                html+=`<div><label>Общее время: 
+                    <div class="time-input-group">
+                        <input type="number" class="factor-sep-hours" data-id="${factor.id}" value="${factor.separateHours}" min="0" placeholder="0"> ч
+                        <input type="number" class="factor-sep-minutes" data-id="${factor.id}" value="${factor.separateMinutes}" min="0" max="59" placeholder="0"> мин
+                    </div></label>
                 <div class="distribute-row"><input type="checkbox" class="factor-distribute" data-id="${factor.id}" ${factor.distribute?'checked':''}><span>Распределить по слайдам</span></div></div>`;
             } else {
-                html+=`<div><label>Среднее время на слайд: <input type="number" class="factor-ps-hours inline-number" data-id="${factor.id}" value="${factor.perSlideHours}" min="0"> ч <input type="number" class="factor-ps-minutes inline-number" data-id="${factor.id}" value="${factor.perSlideMinutes}" min="0" max="59"> мин</label></div>`;
+                html+=`<div><label>Среднее время на слайд: 
+                    <div class="time-input-group">
+                        <input type="number" class="factor-ps-hours" data-id="${factor.id}" value="${factor.perSlideHours}" min="0" placeholder="0"> ч
+                        <input type="number" class="factor-ps-minutes" data-id="${factor.id}" value="${factor.perSlideMinutes}" min="0" max="59" placeholder="0"> мин
+                    </div></label></div>`;
             }
             html+=`</div>`;
         });
