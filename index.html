@@ -68,6 +68,10 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
@@ -79,8 +83,6 @@
             min-height: 100vh;
             transition: background 0.3s, color 0.3s;
             -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
-            max-width: 100vw;
         }
         .app {
             max-width: 960px;
@@ -90,7 +92,12 @@
             gap: 1.8rem;
             overflow-x: hidden;
         }
-        .screen { display: flex; flex-direction: column; gap: 1.8rem; }
+        .screen {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            overflow-x: hidden;
+        }
         .card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -122,6 +129,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-width: 0;
         }
 
         .help-btn {
@@ -158,7 +166,8 @@
 
         .counters { display: flex; flex-wrap: wrap; gap: 1rem; }
         .counter-item {
-            flex: 1 1 110px;
+            flex: 1 1 100px;
+            min-width: 0;
             background: var(--counter-bg);
             border-radius: 14px;
             padding: 1rem 0.8rem;
@@ -194,6 +203,7 @@
             padding: 0.7rem 0.9rem; font-size: 0.95rem; font-family: inherit; transition: 0.2s;
             background: var(--input-bg); color: var(--text);
             width: 100%;
+            min-width: 0;
         }
         input[type="number"]:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,107,53,0.3); }
         .error-text { color: #EF4444; font-size: 0.8rem; margin-top: 0.3rem; display: none; }
@@ -266,6 +276,7 @@
             margin-right: 0.5rem;
             width: 1.1rem;
             height: 1.1rem;
+            flex-shrink: 0;
         }
 
         .modal-overlay {
@@ -293,10 +304,10 @@
             body { padding: 0.6rem; }
             .card { padding: 1rem; }
             .counters { gap: 0.4rem; }
-            .counter-item { padding: 0.5rem 0.3rem; }
+            .counter-item { flex: 1 1 80px; padding: 0.5rem 0.3rem; }
             .counter-value { font-size: 1.4rem; }
             .radio-group { gap: 0.4rem; }
-            .pill-radio { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+            .pill-radio { padding: 0.5rem 0.8rem; font-size: 0.8rem; white-space: normal; text-align: center; }
             .btn { width: 100%; justify-content: center; }
             .slide-content { font-size: 0.85rem; }
             .slide-actions .btn { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
@@ -304,7 +315,7 @@
                 display: block; width: 100%;
             }
             .time-table tr { margin-bottom: 1rem; border-bottom: 2px solid var(--table-border); }
-            .time-table td { border-bottom: none; padding: 0.3rem 0; text-align: left; }
+            .time-table td { border-bottom: none; padding: 0.3rem 0; text-align: left; word-break: break-word; }
             .time-table td:last-child { font-weight: 600; }
             .special-name-input { width: 100%; }
             .modal-box { width: 100%; max-width: 100%; border-radius: 16px 16px 0 0; position: fixed; bottom: 0; left: 0; margin: 0; }
@@ -820,7 +831,7 @@
         let specialTotal=0; specialInputs.forEach(s=>specialTotal+=s.hours*60+s.minutes);
         const separateTotal=separateLines.reduce((sum,l)=>sum+l.minutes,0), totalTime=simpleTime+mediumTime+complexTime+specialTotal+separateTotal;
         const Xr=Math.round(X_total), medXr=Math.round(1.5*X_total), compXr=Math.round(2*X_total);
-        
+
         const elSimple = document.getElementById('formula-simple');
         const elMedium = document.getElementById('formula-medium');
         const elComplex = document.getElementById('formula-complex');
@@ -828,25 +839,25 @@
         const elMediumTime = document.getElementById('time-medium');
         const elComplexTime = document.getElementById('time-complex');
         const elTotal = document.getElementById('total-time-value');
-        
+
         if (elSimple) elSimple.textContent = `Простые: ${A} × (30 мин + ${Xr} мин = ${formatTimeShort(30+Xr)})`;
         if (elMedium) elMedium.textContent = `Средние: ${B} × (45 мин + ${medXr} мин = ${formatTimeShort(45+medXr)})`;
         if (elComplex) elComplex.textContent = `Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})`;
         if (elSimpleTime) elSimpleTime.textContent = `= ${formatTimeShort(simpleTime)}`;
         if (elMediumTime) elMediumTime.textContent = `= ${formatTimeShort(mediumTime)}`;
         if (elComplexTime) elComplexTime.textContent = `= ${formatTimeShort(complexTime)}`;
-        
+
         specialInputs.forEach((sp,i)=>{
             const spMin = sp.hours*60+sp.minutes;
             const elSpTime = document.getElementById(`time-special-${i}`);
             if (elSpTime) elSpTime.textContent = `= ${formatTimeShort(spMin)}`;
         });
-        
+
         separateLines.forEach((line, idx)=>{
             const elSep = document.getElementById(`time-separate-${idx}`);
             if (elSep) elSep.textContent = formatTimeShort(line.minutes);
         });
-        
+
         if (elTotal) elTotal.textContent = `⏱️ Общее время: ${formatTimeShort(totalTime)}`;
     }
 
