@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
     <title>Калькулятор CLM</title>
     <style>
         :root {
@@ -67,16 +67,7 @@
             --pill-border: #475569;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            min-width: 0;
-        }
-        html, body {
-            max-width: 100vw;
-            overflow-x: hidden;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
@@ -88,6 +79,8 @@
             min-height: 100vh;
             transition: background 0.3s, color 0.3s;
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+            max-width: 100vw;
         }
         .app {
             max-width: 960px;
@@ -95,12 +88,9 @@
             display: flex;
             flex-direction: column;
             gap: 1.8rem;
+            overflow-x: hidden;
         }
-        .screen {
-            display: flex;
-            flex-direction: column;
-            gap: 1.8rem;
-        }
+        .screen { display: flex; flex-direction: column; gap: 1.8rem; }
         .card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -108,6 +98,7 @@
             box-shadow: var(--shadow);
             transition: background 0.3s, box-shadow 0.3s;
             max-width: 100%;
+            overflow-x: hidden;
         }
         h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 1.2rem; color: var(--text); word-break: break-word; }
         h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.8rem; color: var(--text); }
@@ -131,7 +122,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            min-width: 0;
         }
 
         .help-btn {
@@ -168,8 +158,7 @@
 
         .counters { display: flex; flex-wrap: wrap; gap: 1rem; }
         .counter-item {
-            flex: 1 1 100px;
-            min-width: 0;
+            flex: 1 1 110px;
             background: var(--counter-bg);
             border-radius: 14px;
             padding: 1rem 0.8rem;
@@ -205,7 +194,6 @@
             padding: 0.7rem 0.9rem; font-size: 0.95rem; font-family: inherit; transition: 0.2s;
             background: var(--input-bg); color: var(--text);
             width: 100%;
-            min-width: 0;
         }
         input[type="number"]:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,107,53,0.3); }
         .error-text { color: #EF4444; font-size: 0.8rem; margin-top: 0.3rem; display: none; }
@@ -247,20 +235,9 @@
             border: 1px solid rgba(255,107,53,0.2); word-break: break-word;
         }
 
-        .time-grid {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 0.5rem 1rem;
-            margin: 1rem 0;
-            align-items: center;
-        }
-        .time-grid > div {
-            border-bottom: 1px solid var(--table-border);
-            padding: 0.6rem 0;
-            word-break: break-word;
-        }
-        .time-grid .grid-value { text-align: right; font-weight: 500; }
-
+        .time-table { width: 100%; border-collapse: collapse; margin: 1rem 0; table-layout: fixed; }
+        .time-table td { padding: 0.6rem 0.3rem; border-bottom: 1px solid var(--table-border); vertical-align: middle; word-break: break-word; }
+        .time-table td:first-child { font-weight: 500; }
         .total-time {
             font-size: 1.3rem; font-weight: 700; margin-top: 1rem; padding: 0.8rem;
             background: var(--result-bg); border-radius: 12px; word-break: break-word;
@@ -275,7 +252,7 @@
             border-bottom: 1px solid var(--border); margin-bottom: 0.5rem; color: var(--text);
         }
         .special-name-input {
-            font-weight: 500; border: none; background: transparent; width: 100%; padding: 0.2rem 0.3rem;
+            font-weight: 500; border: none; background: transparent; width: 130px; padding: 0.2rem 0.3rem;
             border-bottom: 1px dashed var(--border); color: var(--text);
         }
 
@@ -289,17 +266,6 @@
             margin-right: 0.5rem;
             width: 1.1rem;
             height: 1.1rem;
-            flex-shrink: 0;
-        }
-
-        .time-input-group {
-            display: flex;
-            gap: 0.3rem;
-            align-items: center;
-        }
-        .time-input-group input {
-            width: 60px;
-            min-width: 0;
         }
 
         .modal-overlay {
@@ -327,27 +293,22 @@
             body { padding: 0.6rem; }
             .card { padding: 1rem; }
             .counters { gap: 0.4rem; }
-            .counter-item { flex: 1 1 80px; padding: 0.5rem 0.3rem; }
+            .counter-item { padding: 0.5rem 0.3rem; }
             .counter-value { font-size: 1.4rem; }
             .radio-group { gap: 0.4rem; }
-            .pill-radio { padding: 0.5rem 0.8rem; font-size: 0.8rem; white-space: normal; text-align: center; }
-            .btn { width: 100%; justify-content: center; white-space: normal; }
+            .pill-radio { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+            .btn { width: 100%; justify-content: center; }
             .slide-content { font-size: 0.85rem; }
             .slide-actions .btn { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
-            .time-grid {
-                grid-template-columns: 1fr auto;
-                gap: 0.2rem 0.5rem;
+            .time-table, .time-table tbody, .time-table tr, .time-table td {
+                display: block; width: 100%;
             }
-            .time-input-group input {
-                width: auto;
-                flex: 1;
-            }
+            .time-table tr { margin-bottom: 1rem; border-bottom: 2px solid var(--table-border); }
+            .time-table td { border-bottom: none; padding: 0.3rem 0; text-align: left; }
+            .time-table td:last-child { font-weight: 600; }
             .special-name-input { width: 100%; }
             .modal-box { width: 100%; max-width: 100%; border-radius: 16px 16px 0 0; position: fixed; bottom: 0; left: 0; margin: 0; }
             .modal-box.wide { max-width: 100%; }
-            input[type="number"], input[type="text"] {
-                font-size: 16px !important;
-            }
         }
     </style>
 </head>
@@ -859,7 +820,7 @@
         let specialTotal=0; specialInputs.forEach(s=>specialTotal+=s.hours*60+s.minutes);
         const separateTotal=separateLines.reduce((sum,l)=>sum+l.minutes,0), totalTime=simpleTime+mediumTime+complexTime+specialTotal+separateTotal;
         const Xr=Math.round(X_total), medXr=Math.round(1.5*X_total), compXr=Math.round(2*X_total);
-
+        
         const elSimple = document.getElementById('formula-simple');
         const elMedium = document.getElementById('formula-medium');
         const elComplex = document.getElementById('formula-complex');
@@ -867,25 +828,25 @@
         const elMediumTime = document.getElementById('time-medium');
         const elComplexTime = document.getElementById('time-complex');
         const elTotal = document.getElementById('total-time-value');
-
+        
         if (elSimple) elSimple.textContent = `Простые: ${A} × (30 мин + ${Xr} мин = ${formatTimeShort(30+Xr)})`;
         if (elMedium) elMedium.textContent = `Средние: ${B} × (45 мин + ${medXr} мин = ${formatTimeShort(45+medXr)})`;
         if (elComplex) elComplex.textContent = `Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})`;
         if (elSimpleTime) elSimpleTime.textContent = `= ${formatTimeShort(simpleTime)}`;
         if (elMediumTime) elMediumTime.textContent = `= ${formatTimeShort(mediumTime)}`;
         if (elComplexTime) elComplexTime.textContent = `= ${formatTimeShort(complexTime)}`;
-
+        
         specialInputs.forEach((sp,i)=>{
             const spMin = sp.hours*60+sp.minutes;
             const elSpTime = document.getElementById(`time-special-${i}`);
             if (elSpTime) elSpTime.textContent = `= ${formatTimeShort(spMin)}`;
         });
-
+        
         separateLines.forEach((line, idx)=>{
             const elSep = document.getElementById(`time-separate-${idx}`);
             if (elSep) elSep.textContent = formatTimeShort(line.minutes);
         });
-
+        
         if (elTotal) elTotal.textContent = `⏱️ Общее время: ${formatTimeShort(totalTime)}`;
     }
 
@@ -910,38 +871,26 @@
         const separateTotal=separateLines.reduce((sum,l)=>sum+l.minutes,0), totalTime=simpleTime+mediumTime+complexTime+specialTotal+separateTotal;
         const Xr=Math.round(X_total), medXr=Math.round(1.5*X_total), compXr=Math.round(2*X_total);
 
-        let html='<div class="time-grid">';
-        if(A>0) html+=`<div id="formula-simple">Простые: ${A} × (30 мин + ${Xr} мин = ${formatTimeShort(30+Xr)})</div><div class="grid-value" id="time-simple">= ${formatTimeShort(simpleTime)}</div>`;
-        if(B>0) html+=`<div id="formula-medium">Средние: ${B} × (45 мин + ${medXr} мин = ${formatTimeShort(45+medXr)})</div><div class="grid-value" id="time-medium">= ${formatTimeShort(mediumTime)}</div>`;
-        if(C>0) html+=`<div id="formula-complex">Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})</div><div class="grid-value" id="time-complex">= ${formatTimeShort(complexTime)}</div>`;
+        let html='<table class="time-table"><tbody>';
+        if(A>0) html+=`<tr><td id="formula-simple">Простые: ${A} × (30 мин + ${Xr} мин = ${formatTimeShort(30+Xr)})</td><td id="time-simple">= ${formatTimeShort(simpleTime)}</td></tr>`;
+        if(B>0) html+=`<tr><td id="formula-medium">Средние: ${B} × (45 мин + ${medXr} мин = ${formatTimeShort(45+medXr)})</td><td id="time-medium">= ${formatTimeShort(mediumTime)}</td></tr>`;
+        if(C>0) html+=`<tr><td id="formula-complex">Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})</td><td id="time-complex">= ${formatTimeShort(complexTime)}</td></tr>`;
         specialInputs.forEach((sp,i)=>{
             const spMin=sp.hours*60+sp.minutes;
-            html+=`<div><input type="text" class="special-name-input" data-index="${i}" value="${escapeHtml(sp.name)}">
-                <div class="time-input-group">
-                    <input type="number" class="special-hours" data-index="${i}" value="${sp.hours}" min="0" placeholder="0"> ч
-                    <input type="number" class="special-minutes" data-index="${i}" value="${sp.minutes}" min="0" max="59" placeholder="0"> мин
-                </div></div><div class="grid-value" id="time-special-${i}">= ${formatTimeShort(spMin)}</div>`;
+            html+=`<tr><td><input type="text" class="special-name-input" data-index="${i}" value="${escapeHtml(sp.name)}"> <input type="number" class="special-hours" data-index="${i}" value="${sp.hours}" min="0" style="width:60px;"> ч <input type="number" class="special-minutes" data-index="${i}" value="${sp.minutes}" min="0" max="59" style="width:60px;"> мин</td><td id="time-special-${i}">= ${formatTimeShort(spMin)}</td></tr>`;
         });
         separateLines.forEach((line, idx)=>{
-            html+=`<div>+ ${escapeHtml(line.name)}</div><div class="grid-value" id="time-separate-${idx}">${formatTimeShort(line.minutes)}</div>`;
+            html+=`<tr><td>+ ${escapeHtml(line.name)}</td><td id="time-separate-${idx}">${formatTimeShort(line.minutes)}</td></tr>`;
         });
-        html+=`</div><div class="total-time" id="total-time-value">⏱️ Общее время: ${formatTimeShort(totalTime)}</div>`;
+        html+=`</tbody></table><div class="total-time" id="total-time-value">⏱️ Общее время: ${formatTimeShort(totalTime)}</div>`;
         html+=`<div style="margin-top:1.8rem;"><h3>⚙️ Дополнительные факторы</h3>`;
         factors.forEach(factor=>{
             html+=`<div class="factor-card"><input type="text" class="factor-name-input" data-id="${factor.id}" value="${escapeHtml(factor.name)}" placeholder="Название фактора"><div class="radio-group" style="margin:0.8rem 0;"><input type="radio" name="factorMode_${factor.id}" value="separate" id="fmsep_${factor.id}" class="radio-input" ${factor.mode==='separate'?'checked':''}><label for="fmsep_${factor.id}" class="pill-radio">Посчитать отдельно</label><input type="radio" name="factorMode_${factor.id}" value="perSlide" id="fmps_${factor.id}" class="radio-input" ${factor.mode==='perSlide'?'checked':''}><label for="fmps_${factor.id}" class="pill-radio">Посчитать на слайд</label></div>`;
             if(factor.mode==='separate'){
-                html+=`<div><label>Общее время: 
-                    <div class="time-input-group">
-                        <input type="number" class="factor-sep-hours" data-id="${factor.id}" value="${factor.separateHours}" min="0" placeholder="0"> ч
-                        <input type="number" class="factor-sep-minutes" data-id="${factor.id}" value="${factor.separateMinutes}" min="0" max="59" placeholder="0"> мин
-                    </div></label>
+                html+=`<div><label>Общее время: <input type="number" class="factor-sep-hours" data-id="${factor.id}" value="${factor.separateHours}" min="0" style="width:60px;"> ч <input type="number" class="factor-sep-minutes" data-id="${factor.id}" value="${factor.separateMinutes}" min="0" max="59" style="width:60px;"> мин</label>
                 <div class="distribute-row"><input type="checkbox" class="factor-distribute" data-id="${factor.id}" ${factor.distribute?'checked':''}><span>Распределить по слайдам</span></div></div>`;
             } else {
-                html+=`<div><label>Среднее время на слайд: 
-                    <div class="time-input-group">
-                        <input type="number" class="factor-ps-hours" data-id="${factor.id}" value="${factor.perSlideHours}" min="0" placeholder="0"> ч
-                        <input type="number" class="factor-ps-minutes" data-id="${factor.id}" value="${factor.perSlideMinutes}" min="0" max="59" placeholder="0"> мин
-                    </div></label></div>`;
+                html+=`<div><label>Среднее время на слайд: <input type="number" class="factor-ps-hours" data-id="${factor.id}" value="${factor.perSlideHours}" min="0" style="width:60px;"> ч <input type="number" class="factor-ps-minutes" data-id="${factor.id}" value="${factor.perSlideMinutes}" min="0" max="59" style="width:60px;"> мин</label></div>`;
             }
             html+=`</div>`;
         });
