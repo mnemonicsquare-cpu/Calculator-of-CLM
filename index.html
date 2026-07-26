@@ -79,8 +79,17 @@
             min-height: 100vh;
             transition: background 0.3s, color 0.3s;
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+            max-width: 100vw;
         }
-        .app { max-width: 960px; width: 100%; display: flex; flex-direction: column; gap: 1.8rem; }
+        .app {
+            max-width: 960px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            overflow-x: hidden;
+        }
         .screen { display: flex; flex-direction: column; gap: 1.8rem; }
         .card {
             background: var(--card-bg);
@@ -88,8 +97,10 @@
             padding: 1.8rem 2rem;
             box-shadow: var(--shadow);
             transition: background 0.3s, box-shadow 0.3s;
+            max-width: 100%;
+            overflow-x: hidden;
         }
-        h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 1.2rem; color: var(--text); }
+        h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 1.2rem; color: var(--text); word-break: break-word; }
         h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.8rem; color: var(--text); }
 
         .screen-header {
@@ -97,6 +108,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
         .header-left, .header-right { display: flex; align-items: center; flex: 0 0 auto; }
         .header-center {
@@ -107,6 +120,8 @@
             color: var(--text);
             padding: 0 1rem;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .help-btn {
@@ -122,11 +137,12 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
         .help-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
 
         .theme-toggle-container { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; }
-        .theme-toggle { display: inline-block; position: relative; width: 52px; height: 28px; cursor: pointer; }
+        .theme-toggle { display: inline-block; position: relative; width: 52px; height: 28px; cursor: pointer; flex-shrink: 0; }
         .theme-toggle input { display: none; }
         .theme-toggle .slider {
             position: absolute; inset: 0;
@@ -166,7 +182,7 @@
             padding: 0.6rem 1.2rem; border-radius: 30px; border: 1px solid var(--pill-border);
             background: var(--pill-bg); color: var(--text);
             font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
-            user-select: none;
+            user-select: none; white-space: nowrap;
         }
         .radio-input:checked + .pill-radio {
             background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
@@ -177,6 +193,7 @@
             border: 1px solid var(--border); border-radius: 10px;
             padding: 0.7rem 0.9rem; font-size: 0.95rem; font-family: inherit; transition: 0.2s;
             background: var(--input-bg); color: var(--text);
+            width: 100%;
         }
         input[type="number"]:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,107,53,0.3); }
         .error-text { color: #EF4444; font-size: 0.8rem; margin-top: 0.3rem; display: none; }
@@ -185,6 +202,7 @@
             border: none; border-radius: 12px; padding: 0.75rem 1.6rem; font-weight: 600; font-size: 0.95rem;
             cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center;
             gap: 0.4rem; background: #E2E8F0; color: #1E293B; min-height: 48px;
+            white-space: nowrap;
         }
         .btn-accent {
             background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
@@ -202,27 +220,27 @@
         .slide-row {
             display: flex; align-items: center; justify-content: space-between;
             padding: 0.8rem 0; border-bottom: 1px solid var(--table-border);
-            transition: background 0.15s; border-radius: 8px; position: relative; overflow: hidden;
+            transition: background 0.15s; border-radius: 8px; overflow: hidden;
         }
         .slide-row:hover { background: var(--slide-hover); }
         .slide-content {
             flex: 1; min-width: 0; padding: 0 0.5rem;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; word-break: break-word;
         }
         .slide-actions { display: flex; gap: 0.3rem; flex-shrink: 0; margin-right: 0.5rem; }
         .slide-actions .btn { padding: 0.4rem 0.8rem; min-height: auto; }
 
         .result-block {
             background: var(--result-bg); border-radius: 12px; padding: 1rem; margin: 1rem 0; font-weight: 500;
-            border: 1px solid rgba(255,107,53,0.2);
+            border: 1px solid rgba(255,107,53,0.2); word-break: break-word;
         }
 
-        .time-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-        .time-table td { padding: 0.6rem 0.3rem; border-bottom: 1px solid var(--table-border); vertical-align: middle; }
+        .time-table { width: 100%; border-collapse: collapse; margin: 1rem 0; table-layout: fixed; }
+        .time-table td { padding: 0.6rem 0.3rem; border-bottom: 1px solid var(--table-border); vertical-align: middle; word-break: break-word; }
         .time-table td:first-child { font-weight: 500; }
         .total-time {
             font-size: 1.3rem; font-weight: 700; margin-top: 1rem; padding: 0.8rem;
-            background: var(--result-bg); border-radius: 12px;
+            background: var(--result-bg); border-radius: 12px; word-break: break-word;
         }
 
         .factor-card {
@@ -236,6 +254,18 @@
         .special-name-input {
             font-weight: 500; border: none; background: transparent; width: 130px; padding: 0.2rem 0.3rem;
             border-bottom: 1px dashed var(--border); color: var(--text);
+        }
+
+        .distribute-row {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            white-space: nowrap;
+        }
+        .distribute-row input[type="checkbox"] {
+            margin-right: 0.5rem;
+            width: 1.1rem;
+            height: 1.1rem;
         }
 
         .modal-overlay {
@@ -252,7 +282,7 @@
             cursor:pointer; color: var(--text-secondary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
         }
         .modal-scroll {
-            max-height: 70vh; overflow-y: auto; padding-right: 0.5rem;
+            max-height: 70vh; overflow-y: auto; padding-right: 0.5rem; word-break: break-word;
         }
         .modal-scroll ul, .modal-scroll ol { padding-left: 1.5rem; margin: 0.5rem 0; }
         .modal-scroll li { margin-bottom: 0.3rem; }
@@ -260,31 +290,25 @@
         .hidden { display: none !important; }
 
         @media (max-width: 640px) {
-            body { padding: 0.8rem; }
-            .card { padding: 1.2rem; }
-            .screen-header { flex-wrap: wrap; gap: 0.5rem; }
-            .header-center { font-size: 0.9rem; white-space: normal; }
-            .counters { gap: 0.5rem; }
-            .counter-item { padding: 0.6rem 0.4rem; }
-            .counter-value { font-size: 1.5rem; }
+            body { padding: 0.6rem; }
+            .card { padding: 1rem; }
+            .counters { gap: 0.4rem; }
+            .counter-item { padding: 0.5rem 0.3rem; }
+            .counter-value { font-size: 1.4rem; }
             .radio-group { gap: 0.4rem; }
-            .pill-radio { padding: 0.5rem 1rem; font-size: 0.85rem; }
+            .pill-radio { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
             .btn { width: 100%; justify-content: center; }
-            .slide-row { padding: 0.6rem 0; }
-            .slide-content { font-size: 0.9rem; }
-            .slide-actions .btn { padding: 0.4rem 0.6rem; font-size: 0.8rem; }
-            .time-table, .time-table tbody, .time-table tr, .time-table td { display: block; width: 100%; }
+            .slide-content { font-size: 0.85rem; }
+            .slide-actions .btn { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+            .time-table, .time-table tbody, .time-table tr, .time-table td {
+                display: block; width: 100%;
+            }
             .time-table tr { margin-bottom: 1rem; border-bottom: 2px solid var(--table-border); }
             .time-table td { border-bottom: none; padding: 0.3rem 0; text-align: left; }
-            .time-table td:last-child { text-align: left; font-weight: 600; }
+            .time-table td:last-child { font-weight: 600; }
             .special-name-input { width: 100%; }
             .modal-box { width: 100%; max-width: 100%; border-radius: 16px 16px 0 0; position: fixed; bottom: 0; left: 0; margin: 0; }
             .modal-box.wide { max-width: 100%; }
-        }
-
-        @media (max-width: 400px) {
-            .counter-item { padding: 0.5rem 0.2rem; }
-            .counter-label { font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -414,7 +438,7 @@
     </div>
 </div>
 
-<!-- Модальные окна (инструкция, удаление, сброс, сохранение, отчёт) -->
+<!-- Модальные окна -->
 <div id="helpModal" class="modal-overlay hidden">
     <div class="modal-box wide" style="position:relative;">
         <button class="modal-close" id="closeHelpModal">&times;</button>
@@ -516,7 +540,6 @@
         }
     };
 
-    // DOM elements
     const screen1 = document.getElementById('screen1');
     const screen2 = document.getElementById('screen2');
     const themeCheck1 = document.getElementById('themeCheckbox1');
@@ -678,33 +701,19 @@
         slideListContainer.innerHTML=html;
         document.querySelectorAll('.slide-row').forEach(row=>{
             const id = row.dataset.id;
-            row.addEventListener('click', (e) => {
-                if (e.target.closest('button')) return;
-                startEditSlide(id);
-            });
-            row.querySelector('.edit-slide-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                startEditSlide(id);
-            });
-            row.querySelector('.delete-slide-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                appState.slideToDelete = id;
-                deleteSlideModal.classList.remove('hidden');
-            });
+            row.addEventListener('click', (e) => { if (e.target.closest('button')) return; startEditSlide(id); });
+            row.querySelector('.edit-slide-btn').addEventListener('click', (e) => { e.stopPropagation(); startEditSlide(id); });
+            row.querySelector('.delete-slide-btn').addEventListener('click', (e) => { e.stopPropagation(); appState.slideToDelete = id; deleteSlideModal.classList.remove('hidden'); });
         });
     }
 
     function deleteSlideById(id) {
         appState.slides = appState.slides.filter(s => s.id != id);
         if (appState.editingSlideId == id) { appState.editingSlideId = null; resetCurrentForm(); }
-        updateCounters();
-        renderSlideList();
+        updateCounters(); renderSlideList();
     }
 
-    confirmDeleteSlideBtn.addEventListener('click', () => {
-        if (appState.slideToDelete) { deleteSlideById(appState.slideToDelete); appState.slideToDelete = null; }
-        deleteSlideModal.classList.add('hidden');
-    });
+    confirmDeleteSlideBtn.addEventListener('click', () => { if (appState.slideToDelete) { deleteSlideById(appState.slideToDelete); appState.slideToDelete = null; } deleteSlideModal.classList.add('hidden'); });
     closeDeleteSlideModal.addEventListener('click', () => { appState.slideToDelete = null; deleteSlideModal.classList.add('hidden'); });
 
     function setFormFromSlide(slide) {
@@ -774,11 +783,7 @@
         if(appState.currentResult){
             confirmMessage.textContent='Текущий слайд не добавлен. Сохранить и перейти?';
             confirmModal.classList.remove('hidden');
-            confirmSave.onclick=()=>{
-                appState.slides.push({id:appState.nextId++, name: appState.currentResult.name, answers:{...appState.currentResult.answers}, result:{...appState.currentResult.result}});
-                appState.currentResult=null; updateCounters(); renderSlideList();
-                confirmModal.classList.add('hidden'); goToScreen2();
-            };
+            confirmSave.onclick=()=>{ appState.slides.push({id:appState.nextId++, name: appState.currentResult.name, answers:{...appState.currentResult.answers}, result:{...appState.currentResult.result}}); appState.currentResult=null; updateCounters(); renderSlideList(); confirmModal.classList.add('hidden'); goToScreen2(); };
             confirmDiscard.onclick=()=>{ appState.currentResult=null; confirmModal.classList.add('hidden'); goToScreen2(); };
             confirmCancel.onclick=()=> confirmModal.classList.add('hidden');
         } else goToScreen2();
@@ -795,45 +800,138 @@
 
     function formatTimeShort(minutes) { const total=Math.round(minutes); return total<60 ? `${total} мин` : `${Math.floor(total/60)} ч ${total%60} мин`; }
 
-    function renderScreen2() {
+    function updateScreen2Calculations() {
         const A=appState.screen2.simpleTotal, B=appState.screen2.mediumTotal, C=appState.screen2.complexTotal;
         const specialInputs=appState.screen2.specialInputs, factors=appState.screen2.factors;
         let X_total=0; const separateLines=[];
         factors.forEach(factor=>{
-            if(factor.mode==='separate' && !factor.distribute){ const mins=factor.separateHours*60+factor.separateMinutes; if(mins>0) separateLines.push({name:factor.name, minutes:mins}); }
-            else { let T_f=0; if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes; else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes); if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; } }
+            if(factor.mode==='separate' && !factor.distribute){
+                const mins=factor.separateHours*60+factor.separateMinutes;
+                if(mins>0) separateLines.push({name:factor.name, minutes:mins});
+            } else {
+                let T_f=0;
+                if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes;
+                else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes);
+                if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; }
+            }
         });
         const simpleNorm=30+X_total, mediumNorm=45+1.5*X_total, complexNorm=60+2*X_total;
         const simpleTime=Math.round(A*simpleNorm), mediumTime=Math.round(B*mediumNorm), complexTime=Math.round(C*complexNorm);
         let specialTotal=0; specialInputs.forEach(s=>specialTotal+=s.hours*60+s.minutes);
         const separateTotal=separateLines.reduce((sum,l)=>sum+l.minutes,0), totalTime=simpleTime+mediumTime+complexTime+specialTotal+separateTotal;
         const Xr=Math.round(X_total), medXr=Math.round(1.5*X_total), compXr=Math.round(2*X_total);
+        
+        const elSimple = document.getElementById('formula-simple');
+        const elMedium = document.getElementById('formula-medium');
+        const elComplex = document.getElementById('formula-complex');
+        const elSimpleTime = document.getElementById('time-simple');
+        const elMediumTime = document.getElementById('time-medium');
+        const elComplexTime = document.getElementById('time-complex');
+        const elTotal = document.getElementById('total-time-value');
+        
+        if (elSimple) elSimple.textContent = `Простые: ${A} × (30 мин + ${Xr} мин = ${formatTimeShort(30+Xr)})`;
+        if (elMedium) elMedium.textContent = `Средние: ${B} × (45 мин + ${medXr} мин = ${formatTimeShort(45+medXr)})`;
+        if (elComplex) elComplex.textContent = `Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})`;
+        if (elSimpleTime) elSimpleTime.textContent = `= ${formatTimeShort(simpleTime)}`;
+        if (elMediumTime) elMediumTime.textContent = `= ${formatTimeShort(mediumTime)}`;
+        if (elComplexTime) elComplexTime.textContent = `= ${formatTimeShort(complexTime)}`;
+        
+        specialInputs.forEach((sp,i)=>{
+            const spMin = sp.hours*60+sp.minutes;
+            const elSpTime = document.getElementById(`time-special-${i}`);
+            if (elSpTime) elSpTime.textContent = `= ${formatTimeShort(spMin)}`;
+        });
+        
+        separateLines.forEach((line, idx)=>{
+            const elSep = document.getElementById(`time-separate-${idx}`);
+            if (elSep) elSep.textContent = formatTimeShort(line.minutes);
+        });
+        
+        if (elTotal) elTotal.textContent = `⏱️ Общее время: ${formatTimeShort(totalTime)}`;
+    }
+
+    function renderScreen2() {
+        const A=appState.screen2.simpleTotal, B=appState.screen2.mediumTotal, C=appState.screen2.complexTotal;
+        const specialInputs=appState.screen2.specialInputs, factors=appState.screen2.factors;
+        let X_total=0; const separateLines=[];
+        factors.forEach(factor=>{
+            if(factor.mode==='separate' && !factor.distribute){
+                const mins=factor.separateHours*60+factor.separateMinutes;
+                if(mins>0) separateLines.push({name:factor.name, minutes:mins});
+            } else {
+                let T_f=0;
+                if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes;
+                else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes);
+                if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; }
+            }
+        });
+        const simpleNorm=30+X_total, mediumNorm=45+1.5*X_total, complexNorm=60+2*X_total;
+        const simpleTime=Math.round(A*simpleNorm), mediumTime=Math.round(B*mediumNorm), complexTime=Math.round(C*complexNorm);
+        let specialTotal=0; specialInputs.forEach(s=>specialTotal+=s.hours*60+s.minutes);
+        const separateTotal=separateLines.reduce((sum,l)=>sum+l.minutes,0), totalTime=simpleTime+mediumTime+complexTime+specialTotal+separateTotal;
+        const Xr=Math.round(X_total), medXr=Math.round(1.5*X_total), compXr=Math.round(2*X_total);
+
         let html='<table class="time-table"><tbody>';
-        if(A>0) html+=`<tr><td>Простые: ${A} × (30 мин + ${Xr} мин = ${formatTimeShort(30+Xr)})</td><td>= ${formatTimeShort(simpleTime)}</td></tr>`;
-        if(B>0) html+=`<tr><td>Средние: ${B} × (45 мин + ${medXr} мин = ${formatTimeShort(45+medXr)})</td><td>= ${formatTimeShort(mediumTime)}</td></tr>`;
-        if(C>0) html+=`<tr><td>Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})</td><td>= ${formatTimeShort(complexTime)}</td></tr>`;
+        if(A>0) html+=`<tr><td id="formula-simple">Простые: ${A} × (30 мин + ${Xr} мин = ${formatTimeShort(30+Xr)})</td><td id="time-simple">= ${formatTimeShort(simpleTime)}</td></tr>`;
+        if(B>0) html+=`<tr><td id="formula-medium">Средние: ${B} × (45 мин + ${medXr} мин = ${formatTimeShort(45+medXr)})</td><td id="time-medium">= ${formatTimeShort(mediumTime)}</td></tr>`;
+        if(C>0) html+=`<tr><td id="formula-complex">Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})</td><td id="time-complex">= ${formatTimeShort(complexTime)}</td></tr>`;
         specialInputs.forEach((sp,i)=>{
             const spMin=sp.hours*60+sp.minutes;
-            html+=`<tr><td><input type="text" class="special-name-input" data-index="${i}" value="${escapeHtml(sp.name)}" style="width:auto;"> <input type="number" class="special-hours" data-index="${i}" value="${sp.hours}" min="0" style="width:60px;"> ч <input type="number" class="special-minutes" data-index="${i}" value="${sp.minutes}" min="0" max="59" style="width:60px;"> мин</td><td>= ${formatTimeShort(spMin)}</td></tr>`;
+            html+=`<tr><td><input type="text" class="special-name-input" data-index="${i}" value="${escapeHtml(sp.name)}"> <input type="number" class="special-hours" data-index="${i}" value="${sp.hours}" min="0" style="width:60px;"> ч <input type="number" class="special-minutes" data-index="${i}" value="${sp.minutes}" min="0" max="59" style="width:60px;"> мин</td><td id="time-special-${i}">= ${formatTimeShort(spMin)}</td></tr>`;
         });
-        separateLines.forEach(line=>{ html+=`<tr><td>+ ${escapeHtml(line.name)}</td><td>${formatTimeShort(line.minutes)}</td></tr>`; });
-        html+=`</tbody></table><div class="total-time">⏱️ Общее время: ${formatTimeShort(totalTime)}</div>`;
+        separateLines.forEach((line, idx)=>{
+            html+=`<tr><td>+ ${escapeHtml(line.name)}</td><td id="time-separate-${idx}">${formatTimeShort(line.minutes)}</td></tr>`;
+        });
+        html+=`</tbody></table><div class="total-time" id="total-time-value">⏱️ Общее время: ${formatTimeShort(totalTime)}</div>`;
         html+=`<div style="margin-top:1.8rem;"><h3>⚙️ Дополнительные факторы</h3>`;
         factors.forEach(factor=>{
             html+=`<div class="factor-card"><input type="text" class="factor-name-input" data-id="${factor.id}" value="${escapeHtml(factor.name)}" placeholder="Название фактора"><div class="radio-group" style="margin:0.8rem 0;"><input type="radio" name="factorMode_${factor.id}" value="separate" id="fmsep_${factor.id}" class="radio-input" ${factor.mode==='separate'?'checked':''}><label for="fmsep_${factor.id}" class="pill-radio">Посчитать отдельно</label><input type="radio" name="factorMode_${factor.id}" value="perSlide" id="fmps_${factor.id}" class="radio-input" ${factor.mode==='perSlide'?'checked':''}><label for="fmps_${factor.id}" class="pill-radio">Посчитать на слайд</label></div>`;
-            if(factor.mode==='separate') html+=`<div><label>Общее время: <input type="number" class="factor-sep-hours" data-id="${factor.id}" value="${factor.separateHours}" min="0" style="width:60px;"> ч <input type="number" class="factor-sep-minutes" data-id="${factor.id}" value="${factor.separateMinutes}" min="0" max="59" style="width:60px;"> мин</label><label style="margin-left:1rem;"><input type="checkbox" class="factor-distribute" data-id="${factor.id}" ${factor.distribute?'checked':''}> Распределить по слайдам</label></div>`;
-            else html+=`<div><label>Среднее время на слайд: <input type="number" class="factor-ps-hours" data-id="${factor.id}" value="${factor.perSlideHours}" min="0" style="width:60px;"> ч <input type="number" class="factor-ps-minutes" data-id="${factor.id}" value="${factor.perSlideMinutes}" min="0" max="59" style="width:60px;"> мин</label></div>`;
+            if(factor.mode==='separate'){
+                html+=`<div><label>Общее время: <input type="number" class="factor-sep-hours" data-id="${factor.id}" value="${factor.separateHours}" min="0" style="width:60px;"> ч <input type="number" class="factor-sep-minutes" data-id="${factor.id}" value="${factor.separateMinutes}" min="0" max="59" style="width:60px;"> мин</label>
+                <div class="distribute-row"><input type="checkbox" class="factor-distribute" data-id="${factor.id}" ${factor.distribute?'checked':''}><span>Распределить по слайдам</span></div></div>`;
+            } else {
+                html+=`<div><label>Среднее время на слайд: <input type="number" class="factor-ps-hours" data-id="${factor.id}" value="${factor.perSlideHours}" min="0" style="width:60px;"> ч <input type="number" class="factor-ps-minutes" data-id="${factor.id}" value="${factor.perSlideMinutes}" min="0" max="59" style="width:60px;"> мин</label></div>`;
+            }
             html+=`</div>`;
         });
         html+=`<button class="btn btn-outline" id="addFactorBtn" style="margin-top:0.5rem;">➕ Добавить фактор</button>`;
         timeCalcContent.innerHTML=html;
+
         document.querySelectorAll('.special-name-input').forEach(inp=>{ inp.addEventListener('input',function(){ const idx=parseInt(this.dataset.index); appState.screen2.specialInputs[idx].name=this.value||'Особый слайд'; }); });
-        document.querySelectorAll('.special-hours, .special-minutes').forEach(inp=>{ inp.addEventListener('input',function(){ const idx=parseInt(this.dataset.index); const h=parseInt(document.querySelector(`.special-hours[data-index="${idx}"]`).value)||0; const m=parseInt(document.querySelector(`.special-minutes[data-index="${idx}"]`).value)||0; appState.screen2.specialInputs[idx].hours=h; appState.screen2.specialInputs[idx].minutes=m; renderScreen2(); }); });
+        document.querySelectorAll('.special-hours, .special-minutes').forEach(inp=>{
+            inp.addEventListener('input', function(){
+                const idx=parseInt(this.dataset.index);
+                const h=parseInt(document.querySelector(`.special-hours[data-index="${idx}"]`).value)||0;
+                const m=parseInt(document.querySelector(`.special-minutes[data-index="${idx}"]`).value)||0;
+                appState.screen2.specialInputs[idx].hours=h; appState.screen2.specialInputs[idx].minutes=m;
+                updateScreen2Calculations();
+            });
+        });
         document.querySelectorAll('.factor-name-input').forEach(inp=>inp.addEventListener('input',function(){ const id=parseInt(this.dataset.id); const f=appState.screen2.factors.find(f=>f.id===id); if(f) f.name=this.value||'Без названия'; }));
         document.querySelectorAll('input[type="radio"][name^="factorMode_"]').forEach(r=>r.addEventListener('change',function(){ const id=parseInt(this.name.split('_')[1]); const f=appState.screen2.factors.find(f=>f.id===id); if(f){ f.mode=this.value; renderScreen2(); } }));
-        document.querySelectorAll('.factor-sep-hours, .factor-sep-minutes').forEach(inp=>inp.addEventListener('input',function(){ const id=parseInt(this.dataset.id); const f=appState.screen2.factors.find(f=>f.id===id); if(f){ f.separateHours=parseInt(document.querySelector(`.factor-sep-hours[data-id="${id}"]`).value)||0; f.separateMinutes=parseInt(document.querySelector(`.factor-sep-minutes[data-id="${id}"]`).value)||0; renderScreen2(); } }));
+        document.querySelectorAll('.factor-sep-hours, .factor-sep-minutes').forEach(inp=>{
+            inp.addEventListener('input', function(){
+                const id=parseInt(this.dataset.id);
+                const f=appState.screen2.factors.find(f=>f.id===id);
+                if(f){
+                    f.separateHours=parseInt(document.querySelector(`.factor-sep-hours[data-id="${id}"]`).value)||0;
+                    f.separateMinutes=parseInt(document.querySelector(`.factor-sep-minutes[data-id="${id}"]`).value)||0;
+                    updateScreen2Calculations();
+                }
+            });
+        });
         document.querySelectorAll('.factor-distribute').forEach(chk=>chk.addEventListener('change',function(){ const id=parseInt(this.dataset.id); const f=appState.screen2.factors.find(f=>f.id===id); if(f){ f.distribute=this.checked; renderScreen2(); } }));
-        document.querySelectorAll('.factor-ps-hours, .factor-ps-minutes').forEach(inp=>inp.addEventListener('input',function(){ const id=parseInt(this.dataset.id); const f=appState.screen2.factors.find(f=>f.id===id); if(f){ f.perSlideHours=parseInt(document.querySelector(`.factor-ps-hours[data-id="${id}"]`).value)||0; f.perSlideMinutes=parseInt(document.querySelector(`.factor-ps-minutes[data-id="${id}"]`).value)||0; renderScreen2(); } }));
+        document.querySelectorAll('.factor-ps-hours, .factor-ps-minutes').forEach(inp=>{
+            inp.addEventListener('input', function(){
+                const id=parseInt(this.dataset.id);
+                const f=appState.screen2.factors.find(f=>f.id===id);
+                if(f){
+                    f.perSlideHours=parseInt(document.querySelector(`.factor-ps-hours[data-id="${id}"]`).value)||0;
+                    f.perSlideMinutes=parseInt(document.querySelector(`.factor-ps-minutes[data-id="${id}"]`).value)||0;
+                    updateScreen2Calculations();
+                }
+            });
+        });
         document.getElementById('addFactorBtn').addEventListener('click',()=>{ const newId=appState.screen2.factorIdCounter++; appState.screen2.factors.push({id:newId, name:`Фактор ${newId}`, mode:'separate', separateHours:0, separateMinutes:0, distribute:false, perSlideHours:0, perSlideMinutes:0}); renderScreen2(); });
     }
 
