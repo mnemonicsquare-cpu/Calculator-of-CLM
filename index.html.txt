@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
+    <title>Калькулятор CLM</title>
+    <style>
+        :root {
+            --bg: #F4F6F9;
+            --card-bg: #FFFFFF;
+            --text: #1E293B;
+            --text-secondary: #475569;
+            --border: #D1D5DB;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            --accent-start: #FF6B35;
+            --accent-end: #FF3A2F;
+            --accent: #FF3A2F;
+            --counter-bg: #FFFFFF;
+            --result-bg: #FFF5F0;
+            --factor-bg: #F8FAFC;
+            --table-border: #EDF2F7;
+            --toggle-bg: #CBD5E1;
+            --simple-bg: #FFF0E5;
+            --simple-text: #C2410C;
+            --medium-bg: #FFE0CC;
+            --medium-text: #9A3412;
+            --complex-bg: #FFC299;
+            --complex-text: #7C2D12;
+            --special-bg: #FFA366;
+            --special-text: #5E1F00;
+            --btn-outline-hover: rgba(128,128,128,0.1);
+            --input-bg: #FFFFFF;
+            --modal-overlay: rgba(0,0,0,0.5);
+            --slide-hover: rgba(255,107,53,0.05);
+            --pill-bg: #F8FAFC;
+            --pill-border: #D1D5DB;
+        }
+
+        .dark {
+            --bg: #0B1120;
+            --card-bg: #1E293B;
+            --text: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --border: #475569;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --accent-start: #FF8C5A;
+            --accent-end: #FF5A5A;
+            --accent: #FF5A5A;
+            --counter-bg: #1E293B;
+            --result-bg: #2D3A4A;
+            --factor-bg: #1E293B;
+            --table-border: #475569;
+            --toggle-bg: #475569;
+            --simple-bg: #3E1A0B;
+            --simple-text: #FDBA74;
+            --medium-bg: #4A1E0C;
+            --medium-text: #FCA5A5;
+            --complex-bg: #5C2A0E;
+            --complex-text: #FCA5A5;
+            --special-bg: #6B3410;
+            --special-text: #FDBA74;
+            --btn-outline-hover: rgba(255,255,255,0.15);
+            --input-bg: #0F172A;
+            --modal-overlay: rgba(0,0,0,0.7);
+            --slide-hover: rgba(255,107,53,0.1);
+            --pill-bg: #1E293B;
+            --pill-border: #475569;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 1.8rem 1.2rem;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .app { max-width: 960px; width: 100%; display: flex; flex-direction: column; gap: 1.8rem; }
+        .screen { display: flex; flex-direction: column; gap: 1.8rem; }
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            box-shadow: var(--shadow);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 1.2rem; color: var(--text); }
+        h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.8rem; color: var(--text); }
+
+        .screen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .header-left, .header-right { display: flex; align-items: center; flex: 0 0 auto; }
+        .header-center {
+            flex: 1 1 auto;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            padding: 0 1rem;
+            white-space: nowrap;
+        }
+
+        .help-btn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .help-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .theme-toggle-container { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; }
+        .theme-toggle { display: inline-block; position: relative; width: 52px; height: 28px; cursor: pointer; }
+        .theme-toggle input { display: none; }
+        .theme-toggle .slider {
+            position: absolute; inset: 0;
+            background: var(--toggle-bg); border-radius: 28px; transition: background 0.3s;
+        }
+        .theme-toggle .slider::before {
+            content: "";
+            position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%;
+            top: 3px; left: 3px; transition: transform 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .theme-toggle input:checked + .slider { background: var(--accent); }
+        .theme-toggle input:checked + .slider::before { transform: translateX(24px); }
+
+        .counters { display: flex; flex-wrap: wrap; gap: 1rem; }
+        .counter-item {
+            flex: 1 1 110px;
+            background: var(--counter-bg);
+            border-radius: 14px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: background 0.3s, color 0.3s;
+        }
+        .counter-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.04em; }
+        .counter-value { font-size: 2rem; font-weight: 700; line-height: 1.2; }
+        .simple-item { background: var(--simple-bg); color: var(--simple-text); }
+        .medium-item { background: var(--medium-bg); color: var(--medium-text); }
+        .complex-item { background: var(--complex-bg); color: var(--complex-text); }
+        .special-item { background: var(--special-bg); color: var(--special-text); }
+
+        .form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; }
+        label { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text); }
+        .radio-group { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+        .radio-input { position: absolute; opacity: 0; pointer-events: none; }
+        .pill-radio {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.6rem 1.2rem; border-radius: 30px; border: 1px solid var(--pill-border);
+            background: var(--pill-bg); color: var(--text);
+            font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
+            user-select: none;
+        }
+        .radio-input:checked + .pill-radio {
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            color: white; border-color: transparent; box-shadow: 0 4px 8px rgba(255,58,47,0.25);
+        }
+
+        input[type="number"], input[type="text"] {
+            border: 1px solid var(--border); border-radius: 10px;
+            padding: 0.7rem 0.9rem; font-size: 0.95rem; font-family: inherit; transition: 0.2s;
+            background: var(--input-bg); color: var(--text);
+        }
+        input[type="number"]:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,107,53,0.3); }
+        .error-text { color: #EF4444; font-size: 0.8rem; margin-top: 0.3rem; display: none; }
+
+        .btn {
+            border: none; border-radius: 12px; padding: 0.75rem 1.6rem; font-weight: 600; font-size: 0.95rem;
+            cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center;
+            gap: 0.4rem; background: #E2E8F0; color: #1E293B; min-height: 48px;
+        }
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            color: white; box-shadow: 0 4px 12px rgba(255,58,47,0.3);
+        }
+        .btn-accent:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(255,58,47,0.4); }
+        .btn-accent:active { transform: scale(0.97); filter: brightness(0.95); }
+        .btn:disabled { opacity: 0.5; pointer-events: none; transform: none; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { background: var(--btn-outline-hover); }
+        .btn-danger { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        .btn-danger:hover { background: rgba(255,58,47,0.1); }
+
+        .slide-list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 320px; overflow-y: auto; margin-top: 0.8rem; }
+        .slide-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.8rem 0; border-bottom: 1px solid var(--table-border);
+            transition: background 0.15s; border-radius: 8px; position: relative; overflow: hidden;
+        }
+        .slide-row:hover { background: var(--slide-hover); }
+        .slide-content {
+            flex: 1; min-width: 0; padding: 0 0.5rem;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .slide-actions { display: flex; gap: 0.3rem; flex-shrink: 0; margin-right: 0.5rem; }
+        .slide-actions .btn { padding: 0.4rem 0.8rem; min-height: auto; }
+
+        .result-block {
+            background: var(--result-bg); border-radius: 12px; padding: 1rem; margin: 1rem 0; font-weight: 500;
+            border: 1px solid rgba(255,107,53,0.2);
+        }
+
+        .time-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        .time-table td { padding: 0.6rem 0.3rem; border-bottom: 1px solid var(--table-border); vertical-align: middle; }
+        .time-table td:first-child { font-weight: 500; }
+        .total-time {
+            font-size: 1.3rem; font-weight: 700; margin-top: 1rem; padding: 0.8rem;
+            background: var(--result-bg); border-radius: 12px;
+        }
+
+        .factor-card {
+            background: var(--factor-bg); border-radius: 14px; padding: 1.2rem; margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        .factor-name-input {
+            font-weight: 600; border: none; background: transparent; width: 100%; padding: 0.3rem 0;
+            border-bottom: 1px solid var(--border); margin-bottom: 0.5rem; color: var(--text);
+        }
+        .special-name-input {
+            font-weight: 500; border: none; background: transparent; width: 130px; padding: 0.2rem 0.3rem;
+            border-bottom: 1px dashed var(--border); color: var(--text);
+        }
+
+        .modal-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: var(--modal-overlay); display:flex; align-items:center; justify-content:center; z-index:100;
+        }
+        .modal-box {
+            background: var(--card-bg); border-radius:20px; padding:2rem; max-width:500px; width:90%;
+            box-shadow:0 25px 40px rgba(0,0,0,0.3); text-align:left; position: relative;
+        }
+        .modal-box.wide { max-width: 700px; }
+        .modal-close {
+            position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.5rem;
+            cursor:pointer; color: var(--text-secondary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+        }
+        .modal-scroll {
+            max-height: 70vh; overflow-y: auto; padding-right: 0.5rem;
+        }
+        .modal-scroll ul, .modal-scroll ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+        .modal-scroll li { margin-bottom: 0.3rem; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 640px) {
+            body { padding: 0.8rem; }
+            .card { padding: 1.2rem; }
+            .screen-header { flex-wrap: wrap; gap: 0.5rem; }
+            .header-center { font-size: 0.9rem; white-space: normal; }
+            .counters { gap: 0.5rem; }
+            .counter-item { padding: 0.6rem 0.4rem; }
+            .counter-value { font-size: 1.5rem; }
+            .radio-group { gap: 0.4rem; }
+            .pill-radio { padding: 0.5rem 1rem; font-size: 0.85rem; }
+            .btn { width: 100%; justify-content: center; }
+            .slide-row { padding: 0.6rem 0; }
+            .slide-content { font-size: 0.9rem; }
+            .slide-actions .btn { padding: 0.4rem 0.6rem; font-size: 0.8rem; }
+            .time-table, .time-table tbody, .time-table tr, .time-table td { display: block; width: 100%; }
+            .time-table tr { margin-bottom: 1rem; border-bottom: 2px solid var(--table-border); }
+            .time-table td { border-bottom: none; padding: 0.3rem 0; text-align: left; }
+            .time-table td:last-child { text-align: left; font-weight: 600; }
+            .special-name-input { width: 100%; }
+            .modal-box { width: 100%; max-width: 100%; border-radius: 16px 16px 0 0; position: fixed; bottom: 0; left: 0; margin: 0; }
+            .modal-box.wide { max-width: 100%; }
+        }
+
+        @media (max-width: 400px) {
+            .counter-item { padding: 0.5rem 0.2rem; }
+            .counter-label { font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <!-- Экран 1 -->
+    <div id="screen1" class="screen">
+        <div class="screen-header">
+            <div class="header-left">
+                <button class="help-btn" id="helpBtn" title="Инструкция">?</button>
+            </div>
+            <div class="header-center">Калькулятор CLM</div>
+            <div class="header-right">
+                <div class="theme-toggle-container">
+                    <span>☀️</span>
+                    <label class="theme-toggle" for="themeCheckbox1">
+                        <input type="checkbox" id="themeCheckbox1">
+                        <span class="slider"></span>
+                    </label>
+                    <span>🌙</span>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="counters">
+                <div class="counter-item simple-item"><span class="counter-label">Простые:</span> <span class="counter-value" id="countSimple">0</span></div>
+                <div class="counter-item medium-item"><span class="counter-label">Средние:</span> <span class="counter-value" id="countMedium">0</span></div>
+                <div class="counter-item complex-item"><span class="counter-label">Сложные:</span> <span class="counter-value" id="countComplex">0</span></div>
+                <div class="counter-item special-item"><span class="counter-label">Особые:</span> <span class="counter-value" id="countSpecial">0</span></div>
+            </div>
+        </div>
+        <div class="card" id="assessmentCard">
+            <h2 id="formTitle">📝 Оценка слайда №1</h2>
+            <div id="questionsContainer">
+                <div class="form-group">
+                    <label>Название слайда</label>
+                    <input type="text" id="slideNameInput" value="Слайд брифа 1" placeholder="Название слайда">
+                </div>
+                <div class="form-group">
+                    <label>1. Количество видов слайда</label>
+                    <div class="radio-group" id="viewCountGroup">
+                        <input type="radio" name="viewCount" value="1" id="vc1" class="radio-input" checked>
+                        <label for="vc1" class="pill-radio">1</label>
+                        <input type="radio" name="viewCount" value="2" id="vc2" class="radio-input">
+                        <label for="vc2" class="pill-radio">2</label>
+                        <input type="radio" name="viewCount" value="3-4" id="vc34" class="radio-input">
+                        <label for="vc34" class="pill-radio">3–4</label>
+                        <input type="radio" name="viewCount" value="5+" id="vc5" class="radio-input">
+                        <label for="vc5" class="pill-radio">5 и более</label>
+                    </div>
+                    <div id="exactCountWrapper" style="display: none; margin-top: 0.6rem;">
+                        <input type="number" id="exactCount" min="5" value="5" placeholder="Точное число видов">
+                        <span class="error-text" id="exactCountError">Введите целое число ≥ 5</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>2. Анимация</label>
+                    <div class="radio-group" id="animGroup">
+                        <input type="radio" name="animation" value="none" id="anone" class="radio-input" checked>
+                        <label for="anone" class="pill-radio">Нет</label>
+                        <input type="radio" name="animation" value="simple" id="ansimple" class="radio-input">
+                        <label for="ansimple" class="pill-radio">Простая</label>
+                        <input type="radio" name="animation" value="complex" id="ancomplex" class="radio-input">
+                        <label for="ancomplex" class="pill-radio">Сложная</label>
+                    </div>
+                    <div id="simpleAnimWrapper" style="display: none; margin-top: 0.5rem;">
+                        <input type="number" id="simpleAnimCount" min="0" value="0" placeholder="На скольких видах простая анимация?">
+                        <span class="error-text" id="simpleAnimError">Не может превышать общее число видов</span>
+                    </div>
+                    <div id="complexAnimWrapper" style="display: none; margin-top: 0.5rem;">
+                        <input type="number" id="complexAnimCount" min="0" value="0" placeholder="На скольких видах сложная анимация?">
+                        <span class="error-text" id="complexAnimError">Не может превышать общее число видов</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>3. Механика</label>
+                    <div class="radio-group" id="mechGroup">
+                        <input type="radio" name="mechanics" value="none" id="mcnone" class="radio-input" checked>
+                        <label for="mcnone" class="pill-radio">Нет</label>
+                        <input type="radio" name="mechanics" value="simple" id="mcsimple" class="radio-input">
+                        <label for="mcsimple" class="pill-radio">Простая</label>
+                        <input type="radio" name="mechanics" value="complex" id="mccomplex" class="radio-input">
+                        <label for="mccomplex" class="pill-radio">Сложная</label>
+                    </div>
+                    <div id="simpleMechWrapper" style="display: none; margin-top: 0.5rem;">
+                        <input type="number" id="simpleMechCount" min="0" value="0" placeholder="На скольких видах простая механика?">
+                        <span class="error-text" id="simpleMechError">Не может превышать общее число видов</span>
+                    </div>
+                </div>
+                <div class="result-block" id="calcResultBlock" style="display: none;"></div>
+                <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;">
+                    <button class="btn btn-accent" id="evaluateBtn">📊 Рассчитать сложность</button>
+                    <button class="btn btn-accent hidden" id="addSlideBtn">➕ Добавить слайд в список</button>
+                    <button class="btn btn-accent hidden" id="saveEditBtn">💾 Сохранить изменения</button>
+                    <button class="btn btn-outline hidden" id="cancelEditBtn">↩️ Отмена</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>📋 Оценённые слайды брифа</h2>
+            <div class="slide-list" id="slideListContainer"></div>
+            <button class="btn btn-accent" id="finishBtn" style="margin-top: 1.4rem;">➡️ Завершить расчёт сложности слайдов</button>
+        </div>
+    </div>
+
+    <!-- Экран 2 -->
+    <div id="screen2" class="screen hidden">
+        <div class="card">
+            <div class="screen-header">
+                <button class="btn btn-outline" id="backToScreen1Btn">← Назад</button>
+                <h2 style="margin:0;">⏱️ Расчёт времени</h2>
+                <div class="theme-toggle-container">
+                    <span>☀️</span>
+                    <label class="theme-toggle" for="themeCheckbox2">
+                        <input type="checkbox" id="themeCheckbox2">
+                        <span class="slider"></span>
+                    </label>
+                    <span>🌙</span>
+                </div>
+            </div>
+            <div id="timeCalcContent"></div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.4rem; flex-wrap: wrap;">
+                <button class="btn btn-accent" id="generateReportBtn">📄 Создать отчёт</button>
+                <button class="btn btn-danger" id="resetAppBtn">🗑️ Завершить расчёты по данной презентации</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальные окна (инструкция, удаление, сброс, сохранение, отчёт) -->
+<div id="helpModal" class="modal-overlay hidden">
+    <div class="modal-box wide" style="position:relative;">
+        <button class="modal-close" id="closeHelpModal">&times;</button>
+        <h2 style="margin-bottom:1rem;">📘 Инструкция</h2>
+        <div class="modal-scroll" style="max-height: 65vh;">
+            <p><strong>Для чего нужно приложение</strong></p>
+            <p>Этот инструмент помогает:</p>
+            <ul>
+                <li>Оценить, насколько сложен каждый слайд будущей CLM-презентации.</li>
+                <li>Спрогнозировать, сколько времени потребуется на создание прототипа всей презентации.</li>
+            </ul>
+            <p>Вы последовательно оцениваете слайды, получаете итоговые цифры по простым, средним, сложным и особым слайдам, а затем указываете дополнительные временные факторы и получаете реалистичную оценку трудозатрат в часах и минутах.</p>
+            <p>Термин <strong>«Особый слайд»</strong> используется для слайдов, к которым не удается применить обычную классификацию по сложности. Обычно такие слайды содержат сложные механики. Предполагаемое количество времени для создания прототипа каждого особого слайда предлагается указывать отдельно.</p>
+            <hr>
+            <h3>Экран 1 — Оценка сложности слайдов</h3>
+            <p><strong>Верхние счётчики</strong><br>В самом верху вы видите четыре цветных блока: <strong>Простые</strong>, <strong>Средние</strong>, <strong>Сложные</strong>, <strong>Особые</strong>. Числа в них показывают, сколько слайдов каждого типа вы уже оценили. Они обновляются автоматически при каждом добавлении, изменении или удалении слайда.</p>
+            <p><strong>Карточка оценки слайда</strong></p>
+            <ol>
+                <li><strong>Название слайда</strong> — Вы можете дать слайду понятное имя (например, «Слайд 5 — Механизм действия»). По умолчанию подставляется «Слайд брифа 1», «Слайд брифа 2» и т.д. Название можно редактировать в любой момент.</li>
+                <li><strong>Вопросы о слайде</strong> — Для каждого слайда вы отвечаете на три вопроса:
+                    <ul>
+                        <li><strong>Количество видов слайда</strong> — выберите 1, 2, 3–4 или 5 и более. Если выбрано «5 и более», появится поле для точного числа видов.</li>
+                        <li><strong>Анимация</strong> — Нет / Простая (последовательное появление) / Сложная (механизм действия, перетаскивание). <strong>Важно:</strong> если выбрано «5 и более видов» и указана анимация, появятся поля для количества видов с анимацией.</li>
+                        <li><strong>Механика</strong> — Нет / Простая (калькулятор, опрос) / Сложная (многоэтапный расчёт). Если механика сложная, слайд сразу считается Особым (почасовая оценка). При простой механике и «5 и более видов» появится поле для количества видов с механикой.</li>
+                    </ul>
+                </li>
+                <li><strong>Кнопка «Рассчитать сложность»</strong> — показывает результат: тип слайда или распределение по сложности.</li>
+                <li><strong>Добавление слайда</strong> — после расчёта появляется кнопка «Добавить слайд в список». Нажмите её, чтобы сохранить оценку.</li>
+            </ol>
+            <p><strong>Список оценённых слайдов</strong><br>Ниже находится прокручиваемый список. Каждый слайд можно <strong>редактировать</strong> (иконка карандаша) или <strong>удалить</strong> (крестик). При удалении потребуется подтверждение.</p>
+            <p><strong>Переход к расчёту времени</strong> — кнопка «Завершить расчёт сложности слайдов» внизу экрана.</p>
+            <hr>
+            <h3>Экран 2 — Расчёт времени</h3>
+            <p>В верхней части таблица с нормативами и итоговым временем по каждому типу. Особые слайды можно переименовывать и вводить для них индивидуальное время. Отсутствующие типы не отображаются.</p>
+            <p><strong>Дополнительные факторы</strong> — блок под таблицей. Изначально содержит фактор «Поиск и анализ информации». Можно добавить неограниченное количество своих факторов, переименовывать их. Для каждого фактора выбирается режим:</p>
+            <ul>
+                <li><strong>Посчитать отдельно</strong> — время добавляется отдельной строкой. Можно распределить по слайдам (тогда нормативы увеличатся).</li>
+                <li><strong>Посчитать на слайд в среднем</strong> — указывается среднее время на слайд, нормативы пересчитываются.</li>
+            </ul>
+            <p>Все изменения мгновенно влияют на общее время.</p>
+            <p><strong>Кнопка «Создать отчёт»</strong> — показывает текстовый отчёт для копирования.</p>
+            <p><strong>Кнопка «Завершить расчёты»</strong> — сбрасывает все данные и возвращает к началу.</p>
+            <p><strong>Кнопка «Назад»</strong> — возвращает к списку слайдов.</p>
+            <hr>
+            <p><strong>Тёмная тема</strong> — переключатель в верхней части каждого экрана.</p>
+        </div>
+    </div>
+</div>
+
+<div id="deleteSlideModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <button class="modal-close" id="closeDeleteSlideModal">&times;</button>
+        <p>Вы уверены, что хотите удалить этот слайд?</p>
+        <button class="btn btn-accent" id="confirmDeleteSlideBtn" style="margin-top:1.5rem;">Да</button>
+    </div>
+</div>
+
+<div id="resetModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <button class="modal-close" id="closeResetModal">&times;</button>
+        <p>Вы уверены? Данные о расчётах будут удалены.</p>
+        <button class="btn btn-accent" id="confirmResetBtn" style="margin-top:1.5rem;">Да</button>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <p id="confirmMessage"></p>
+        <div style="display: flex; gap: 0.8rem; justify-content: center; margin-top: 1.4rem; flex-wrap: wrap;">
+            <button class="btn btn-accent" id="confirmSave">💾 Сохранить и перейти</button>
+            <button class="btn btn-outline" id="confirmDiscard">🗑️ Не сохранять</button>
+            <button class="btn btn-outline" id="confirmCancel">↩️ Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div id="reportModal" class="modal-overlay hidden">
+    <div class="modal-box" style="position:relative; max-width:600px; text-align:left;">
+        <button class="modal-close" id="closeReportBtn">&times;</button>
+        <h2 style="margin-bottom:1rem;">📄 Отчёт по времени</h2>
+        <pre id="reportText" style="white-space: pre-wrap; font-family: inherit; font-size:0.95rem; background:var(--factor-bg); padding:1rem; border-radius:12px; color:var(--text);"></pre>
+    </div>
+</div>
+
+<script>
+(function() {
+    const appState = {
+        slides: [],
+        nextId: 1,
+        currentResult: null,
+        editingSlideId: null,
+        darkTheme: false,
+        slideToDelete: null,
+        screen2: {
+            simpleTotal: 0, mediumTotal: 0, complexTotal: 0,
+            specialInputs: [],
+            factors: [],
+            factorIdCounter: 1
+        }
+    };
+
+    // DOM elements
+    const screen1 = document.getElementById('screen1');
+    const screen2 = document.getElementById('screen2');
+    const themeCheck1 = document.getElementById('themeCheckbox1');
+    const themeCheck2 = document.getElementById('themeCheckbox2');
+    const countSimpleEl = document.getElementById('countSimple');
+    const countMediumEl = document.getElementById('countMedium');
+    const countComplexEl = document.getElementById('countComplex');
+    const countSpecialEl = document.getElementById('countSpecial');
+    const formTitle = document.getElementById('formTitle');
+    const slideNameInput = document.getElementById('slideNameInput');
+    const exactCountWrapper = document.getElementById('exactCountWrapper');
+    const exactCountInput = document.getElementById('exactCount');
+    const exactCountError = document.getElementById('exactCountError');
+    const simpleAnimWrapper = document.getElementById('simpleAnimWrapper');
+    const simpleAnimInput = document.getElementById('simpleAnimCount');
+    const simpleAnimError = document.getElementById('simpleAnimError');
+    const complexAnimWrapper = document.getElementById('complexAnimWrapper');
+    const complexAnimInput = document.getElementById('complexAnimCount');
+    const complexAnimError = document.getElementById('complexAnimError');
+    const simpleMechWrapper = document.getElementById('simpleMechWrapper');
+    const simpleMechInput = document.getElementById('simpleMechCount');
+    const simpleMechError = document.getElementById('simpleMechError');
+    const calcResultBlock = document.getElementById('calcResultBlock');
+    const evaluateBtn = document.getElementById('evaluateBtn');
+    const addSlideBtn = document.getElementById('addSlideBtn');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const slideListContainer = document.getElementById('slideListContainer');
+    const finishBtn = document.getElementById('finishBtn');
+    const timeCalcContent = document.getElementById('timeCalcContent');
+    const backBtn = document.getElementById('backToScreen1Btn');
+    const generateReportBtn = document.getElementById('generateReportBtn');
+    const resetAppBtn = document.getElementById('resetAppBtn');
+    const reportModal = document.getElementById('reportModal');
+    const reportText = document.getElementById('reportText');
+    const closeReportBtn = document.getElementById('closeReportBtn');
+    const confirmModal = document.getElementById('confirmModal');
+    const confirmMessage = document.getElementById('confirmMessage');
+    const confirmSave = document.getElementById('confirmSave');
+    const confirmDiscard = document.getElementById('confirmDiscard');
+    const confirmCancel = document.getElementById('confirmCancel');
+    const deleteSlideModal = document.getElementById('deleteSlideModal');
+    const closeDeleteSlideModal = document.getElementById('closeDeleteSlideModal');
+    const confirmDeleteSlideBtn = document.getElementById('confirmDeleteSlideBtn');
+    const resetModal = document.getElementById('resetModal');
+    const closeResetModal = document.getElementById('closeResetModal');
+    const confirmResetBtn = document.getElementById('confirmResetBtn');
+    const helpBtn = document.getElementById('helpBtn');
+    const helpModal = document.getElementById('helpModal');
+    const closeHelpModal = document.getElementById('closeHelpModal');
+
+    function getRadioValue(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; }
+    function getExactCount() { const v = parseInt(exactCountInput.value,10); return isNaN(v) ? null : v; }
+
+    function applyTheme() {
+        document.body.classList.toggle('dark', appState.darkTheme);
+        themeCheck1.checked = appState.darkTheme;
+        themeCheck2.checked = appState.darkTheme;
+    }
+
+    themeCheck1.addEventListener('change', () => { appState.darkTheme = themeCheck1.checked; applyTheme(); });
+    themeCheck2.addEventListener('change', () => { appState.darkTheme = themeCheck2.checked; applyTheme(); });
+
+    function updateVisibility() {
+        const viewVal = getRadioValue('viewCount'), animVal = getRadioValue('animation'), mechVal = getRadioValue('mechanics'), is5plus = viewVal === '5+';
+        exactCountWrapper.style.display = is5plus ? 'block' : 'none';
+        if (!is5plus) exactCountInput.value = 5;
+        simpleAnimWrapper.style.display = (is5plus && animVal === 'simple') ? 'block' : 'none';
+        complexAnimWrapper.style.display = (is5plus && animVal === 'complex') ? 'block' : 'none';
+        simpleMechWrapper.style.display = (is5plus && mechVal === 'simple') ? 'block' : 'none';
+        if (simpleAnimWrapper.style.display === 'none') simpleAnimInput.value = 0;
+        if (complexAnimWrapper.style.display === 'none') complexAnimInput.value = 0;
+        if (simpleMechWrapper.style.display === 'none') simpleMechInput.value = 0;
+        adjustMaxValues(); validateForm();
+    }
+
+    function adjustMaxValues() {
+        const is5plus = getRadioValue('viewCount') === '5+', exact = is5plus ? getExactCount() : null, max = (exact !== null && exact >= 5) ? exact : 999;
+        simpleAnimInput.max = max; complexAnimInput.max = max; simpleMechInput.max = max;
+        if (exact !== null) {
+            if (parseInt(simpleAnimInput.value,10) > exact) simpleAnimInput.value = exact;
+            if (parseInt(complexAnimInput.value,10) > exact) complexAnimInput.value = exact;
+            if (parseInt(simpleMechInput.value,10) > exact) simpleMechInput.value = exact;
+        }
+    }
+
+    function validateForm() {
+        let valid = true;
+        exactCountError.style.display = 'none'; simpleAnimError.style.display = 'none'; complexAnimError.style.display = 'none'; simpleMechError.style.display = 'none';
+        if (getRadioValue('viewCount') === '5+') {
+            const exact = getExactCount();
+            if (exact === null || exact < 5 || !Number.isInteger(exact)) { exactCountError.style.display = 'block'; valid = false; }
+            else {
+                const animVal = getRadioValue('animation'), mechVal = getRadioValue('mechanics');
+                if (animVal === 'simple' && simpleAnimWrapper.style.display !== 'none') { const v = parseInt(simpleAnimInput.value,10); if (isNaN(v) || v < 0 || v > exact) { simpleAnimError.style.display = 'block'; valid = false; } }
+                if (animVal === 'complex' && complexAnimWrapper.style.display !== 'none') { const v = parseInt(complexAnimInput.value,10); if (isNaN(v) || v < 0 || v > exact) { complexAnimError.style.display = 'block'; valid = false; } }
+                if (mechVal === 'simple' && simpleMechWrapper.style.display !== 'none') { const v = parseInt(simpleMechInput.value,10); if (isNaN(v) || v < 0 || v > exact) { simpleMechError.style.display = 'block'; valid = false; } }
+            }
+        }
+        evaluateBtn.disabled = !valid;
+        return valid;
+    }
+
+    function getFormAnswers() {
+        return {
+            viewCount: getRadioValue('viewCount'), animation: getRadioValue('animation'), mechanics: getRadioValue('mechanics'),
+            exactCount: getRadioValue('viewCount') === '5+' ? getExactCount() : null,
+            simpleAnimCount: (getRadioValue('viewCount') === '5+' && getRadioValue('animation') === 'simple') ? (parseInt(simpleAnimInput.value,10) || 0) : 0,
+            complexAnimCount: (getRadioValue('viewCount') === '5+' && getRadioValue('animation') === 'complex') ? (parseInt(complexAnimInput.value,10) || 0) : 0,
+            simpleMechCount: (getRadioValue('viewCount') === '5+' && getRadioValue('mechanics') === 'simple') ? (parseInt(simpleMechInput.value,10) || 0) : 0,
+        };
+    }
+
+    function evaluateSlide(answers) {
+        const { viewCount, animation, mechanics, exactCount, simpleAnimCount, complexAnimCount, simpleMechCount } = answers;
+        if (mechanics === 'complex') return { special: true, simple: 0, medium: 0, complex: 0 };
+        if (mechanics === 'simple') return viewCount !== '5+' ? { simple:0,medium:0,complex:1,special:false } : detailedCalc(exactCount, simpleAnimCount, complexAnimCount, simpleMechCount);
+        if (animation === 'complex') return viewCount !== '5+' ? { simple:0,medium:0,complex:1,special:false } : detailedCalc(exactCount, simpleAnimCount, complexAnimCount, simpleMechCount);
+        if (viewCount === '1' && animation === 'none') return { simple:1,medium:0,complex:0,special:false };
+        if (viewCount === '1' && animation === 'simple') return { simple:0,medium:1,complex:0,special:false };
+        if (viewCount === '2') return { simple:0,medium:1,complex:0,special:false };
+        if (viewCount === '3-4') return { simple:0,medium:0,complex:1,special:false };
+        if (viewCount === '5+') return detailedCalc(exactCount, simpleAnimCount, complexAnimCount, simpleMechCount);
+        return { simple:0,medium:0,complex:0,special:false };
+    }
+
+    function detailedCalc(total, simpleAnim, complexAnim, simpleMech) {
+        let complexTotal = complexAnim + simpleMech; if (complexTotal > total) complexTotal = total;
+        let remaining1 = total - complexTotal, mediumFromAnim = Math.min(simpleAnim, remaining1), remaining2 = remaining1 - mediumFromAnim;
+        let simpleFromRest=0, mediumFromRest=0, complexFromRest=0;
+        if (remaining2 % 2 === 0) mediumFromRest = remaining2/2;
+        else if (remaining2 >= 3) { complexFromRest=1; remaining2-=3; mediumFromRest=remaining2/2; }
+        else if (remaining2 === 1) simpleFromRest=1;
+        return { simple:simpleFromRest, medium:mediumFromAnim+mediumFromRest, complex:complexTotal+complexFromRest, special:false };
+    }
+
+    function updateCounters() {
+        let s=0,m=0,c=0,sp=0;
+        appState.slides.forEach(sl => { if(sl.result.special) sp++; else { s+=sl.result.simple||0; m+=sl.result.medium||0; c+=sl.result.complex||0; } });
+        countSimpleEl.textContent = s; countMediumEl.textContent = m; countComplexEl.textContent = c; countSpecialEl.textContent = sp;
+    }
+
+    function renderSlideList() {
+        if (appState.slides.length===0) { slideListContainer.innerHTML='<p style="color:var(--text-secondary);text-align:center;padding:1rem;">Нет оценённых слайдов</p>'; return; }
+        let html='';
+        appState.slides.forEach((sl,idx)=>{
+            const r=sl.result; let desc='';
+            if(r.special) desc='Особый (почасовая оценка)';
+            else if(r.simple+r.medium+r.complex===1) { if(r.simple) desc='Простой'; else if(r.medium) desc='Средний'; else desc='Сложный'; }
+            else desc=`Простые: ${r.simple}, Средние: ${r.medium}, Сложные: ${r.complex}`;
+            html+=`<div class="slide-row" data-id="${sl.id}">
+                <div class="slide-content">${escapeHtml(sl.name)} — ${desc}</div>
+                <div class="slide-actions">
+                    <button class="btn btn-outline edit-slide-btn" style="padding:0.3rem 0.8rem;">✎</button>
+                    <button class="btn btn-outline delete-slide-btn" style="padding:0.3rem 0.8rem; color:var(--accent); border-color:var(--accent);">✕</button>
+                </div>
+            </div>`;
+        });
+        slideListContainer.innerHTML=html;
+        document.querySelectorAll('.slide-row').forEach(row=>{
+            const id = row.dataset.id;
+            row.addEventListener('click', (e) => {
+                if (e.target.closest('button')) return;
+                startEditSlide(id);
+            });
+            row.querySelector('.edit-slide-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                startEditSlide(id);
+            });
+            row.querySelector('.delete-slide-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                appState.slideToDelete = id;
+                deleteSlideModal.classList.remove('hidden');
+            });
+        });
+    }
+
+    function deleteSlideById(id) {
+        appState.slides = appState.slides.filter(s => s.id != id);
+        if (appState.editingSlideId == id) { appState.editingSlideId = null; resetCurrentForm(); }
+        updateCounters();
+        renderSlideList();
+    }
+
+    confirmDeleteSlideBtn.addEventListener('click', () => {
+        if (appState.slideToDelete) { deleteSlideById(appState.slideToDelete); appState.slideToDelete = null; }
+        deleteSlideModal.classList.add('hidden');
+    });
+    closeDeleteSlideModal.addEventListener('click', () => { appState.slideToDelete = null; deleteSlideModal.classList.add('hidden'); });
+
+    function setFormFromSlide(slide) {
+        document.querySelector(`input[name="viewCount"][value="${slide.answers.viewCount}"]`).checked=true;
+        document.querySelector(`input[name="animation"][value="${slide.answers.animation}"]`).checked=true;
+        document.querySelector(`input[name="mechanics"][value="${slide.answers.mechanics}"]`).checked=true;
+        if(slide.answers.viewCount==='5+') exactCountInput.value=slide.answers.exactCount||5;
+        simpleAnimInput.value=slide.answers.simpleAnimCount||0; complexAnimInput.value=slide.answers.complexAnimCount||0; simpleMechInput.value=slide.answers.simpleMechCount||0;
+        slideNameInput.value = slide.name;
+        updateVisibility();
+    }
+
+    function resetCurrentForm() {
+        document.querySelector('input[name="viewCount"][value="1"]').checked=true;
+        document.querySelector('input[name="animation"][value="none"]').checked=true;
+        document.querySelector('input[name="mechanics"][value="none"]').checked=true;
+        exactCountInput.value=5; simpleAnimInput.value=0; complexAnimInput.value=0; simpleMechInput.value=0;
+        slideNameInput.value = `Слайд брифа ${appState.slides.length + 1}`;
+        appState.currentResult=null; appState.editingSlideId=null;
+        calcResultBlock.style.display='none'; addSlideBtn.classList.add('hidden'); saveEditBtn.classList.add('hidden'); cancelEditBtn.classList.add('hidden');
+        evaluateBtn.disabled=false; evaluateBtn.classList.remove('hidden');
+        formTitle.textContent=`📝 Оценка слайда №${appState.slides.length+1}`;
+        updateVisibility();
+    }
+
+    function startEditSlide(id) {
+        const slide=appState.slides.find(s=>s.id==id); if(!slide) return;
+        appState.editingSlideId=id; appState.currentResult=null;
+        setFormFromSlide(slide);
+        calcResultBlock.style.display='none'; addSlideBtn.classList.add('hidden'); saveEditBtn.classList.remove('hidden'); cancelEditBtn.classList.remove('hidden');
+        evaluateBtn.disabled=false; evaluateBtn.classList.remove('hidden');
+        formTitle.textContent=`✏️ Редактирование: ${slide.name}`;
+        updateVisibility();
+        document.getElementById('assessmentCard').scrollIntoView({behavior:'smooth'});
+    }
+
+    evaluateBtn.addEventListener('click',()=>{
+        if(!validateForm()) return;
+        const answers=getFormAnswers(), result=evaluateSlide(answers);
+        appState.currentResult={answers,result,name: slideNameInput.value.trim() || `Слайд брифа ${appState.slides.length+1}`};
+        let text='';
+        if(result.special) text='🔮 Особый слайд (почасовая оценка)';
+        else if(result.simple+result.medium+result.complex===1) { if(result.simple) text='✅ Простой слайд'; else if(result.medium) text='⚠️ Средний слайд'; else text='🔥 Сложный слайд'; }
+        else text=`📐 Простые: ${result.simple}, Средние: ${result.medium}, Сложные: ${result.complex}`;
+        calcResultBlock.style.display='block'; calcResultBlock.textContent=text;
+        evaluateBtn.disabled=true;
+        if(appState.editingSlideId) saveEditBtn.classList.remove('hidden');
+        else addSlideBtn.classList.remove('hidden');
+    });
+
+    addSlideBtn.addEventListener('click',()=>{
+        if(!appState.currentResult) return;
+        appState.slides.push({id:appState.nextId++, name: appState.currentResult.name, answers:{...appState.currentResult.answers}, result:{...appState.currentResult.result}});
+        appState.currentResult=null; updateCounters(); renderSlideList(); resetCurrentForm();
+    });
+
+    saveEditBtn.addEventListener('click',()=>{
+        if(!appState.currentResult||!appState.editingSlideId) return;
+        const slide=appState.slides.find(s=>s.id==appState.editingSlideId);
+        if(slide){ slide.name = appState.currentResult.name; slide.answers={...appState.currentResult.answers}; slide.result={...appState.currentResult.result}; }
+        appState.editingSlideId=null; appState.currentResult=null; updateCounters(); renderSlideList(); resetCurrentForm();
+    });
+
+    cancelEditBtn.addEventListener('click',resetCurrentForm);
+
+    finishBtn.addEventListener('click',()=>{
+        if(appState.currentResult){
+            confirmMessage.textContent='Текущий слайд не добавлен. Сохранить и перейти?';
+            confirmModal.classList.remove('hidden');
+            confirmSave.onclick=()=>{
+                appState.slides.push({id:appState.nextId++, name: appState.currentResult.name, answers:{...appState.currentResult.answers}, result:{...appState.currentResult.result}});
+                appState.currentResult=null; updateCounters(); renderSlideList();
+                confirmModal.classList.add('hidden'); goToScreen2();
+            };
+            confirmDiscard.onclick=()=>{ appState.currentResult=null; confirmModal.classList.add('hidden'); goToScreen2(); };
+            confirmCancel.onclick=()=> confirmModal.classList.add('hidden');
+        } else goToScreen2();
+    });
+
+    function goToScreen2() {
+        let s=0,m=0,c=0; const specialInputs=[]; let specialCounter = 1;
+        appState.slides.forEach(sl=>{ if(sl.result.special) specialInputs.push({ name: `Особый слайд ${specialCounter++}`, hours:0, minutes:0 }); else { s+=sl.result.simple||0; m+=sl.result.medium||0; c+=sl.result.complex||0; } });
+        appState.screen2.simpleTotal=s; appState.screen2.mediumTotal=m; appState.screen2.complexTotal=c; appState.screen2.specialInputs=specialInputs;
+        appState.screen2.factors=[{ id:1, name:'Поиск и анализ информации', mode:'separate', separateHours:0, separateMinutes:0, distribute:false, perSlideHours:0, perSlideMinutes:0 }];
+        appState.screen2.factorIdCounter=2;
+        screen1.classList.add('hidden'); screen2.classList.remove('hidden'); renderScreen2();
+    }
+
+    function formatTimeShort(minutes) { const total=Math.round(minutes); return total<60 ? `${total} мин` : `${Math.floor(total/60)} ч ${total%60} мин`; }
+
+    function renderScreen2() {
+        const A=appState.screen2.simpleTotal, B=appState.screen2.mediumTotal, C=appState.screen2.complexTotal;
+        const specialInputs=appState.screen2.specialInputs, factors=appState.screen2.factors;
+        let X_total=0; const separateLines=[];
+        factors.forEach(factor=>{
+            if(factor.mode==='separate' && !factor.distribute){ const mins=factor.separateHours*60+factor.separateMinutes; if(mins>0) separateLines.push({name:factor.name, minutes:mins}); }
+            else { let T_f=0; if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes; else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes); if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; } }
+        });
+        const simpleNorm=30+X_total, mediumNorm=45+1.5*X_total, complexNorm=60+2*X_total;
+        const simpleTime=Math.round(A*simpleNorm), mediumTime=Math.round(B*mediumNorm), complexTime=Math.round(C*complexNorm);
+        let specialTotal=0; specialInputs.forEach(s=>specialTotal+=s.hours*60+s.minutes);
+        const separateTotal=separateLines.reduce((sum,l)=>sum+l.minutes,0), totalTime=simpleTime+mediumTime+complexTime+specialTotal+separateTotal;
+        const Xr=Math.round(X_total), medXr=Math.round(1.5*X_total), compXr=Math.round(2*X_total);
+        let html='<table class="time-table"><tbody>';
+        if(A>0) html+=`<tr><td>Простые: ${A} × (30 мин + ${Xr} мин = ${formatTimeShort(30+Xr)})</td><td>= ${formatTimeShort(simpleTime)}</td></tr>`;
+        if(B>0) html+=`<tr><td>Средние: ${B} × (45 мин + ${medXr} мин = ${formatTimeShort(45+medXr)})</td><td>= ${formatTimeShort(mediumTime)}</td></tr>`;
+        if(C>0) html+=`<tr><td>Сложные: ${C} × (60 мин + ${compXr} мин = ${formatTimeShort(60+compXr)})</td><td>= ${formatTimeShort(complexTime)}</td></tr>`;
+        specialInputs.forEach((sp,i)=>{
+            const spMin=sp.hours*60+sp.minutes;
+            html+=`<tr><td><input type="text" class="special-name-input" data-index="${i}" value="${escapeHtml(sp.name)}" style="width:auto;"> <input type="number" class="special-hours" data-index="${i}" value="${sp.hours}" min="0" style="width:60px;"> ч <input type="number" class="special-minutes" data-index="${i}" value="${sp.minutes}" min="0" max="59" style="width:60px;"> мин</td><td>= ${formatTimeShort(spMin)}</td></tr>`;
+        });
+        separateLines.forEach(line=>{ html+=`<tr><td>+ ${escapeHtml(line.name)}</td><td>${formatTimeShort(line.minutes)}</td></tr>`; });
+        html+=`</tbody></table><div class="total-time">⏱️ Общее время: ${formatTimeShort(totalTime)}</div>`;
+        html+=`<div style="margin-top:1.8rem;"><h3>⚙️ Дополнительные факторы</h3>`;
+        factors.forEach(factor=>{
+            html+=`<div class="factor-card"><input type="text" class="factor-name-input" data-id="${factor.id}" value="${escapeHtml(factor.name)}" placeholder="Название фактора"><div class="radio-group" style="margin:0.8rem 0;"><input type="radio" name="factorMode_${factor.id}" value="separate" id="fmsep_${factor.id}" class="radio-input" ${factor.mode==='separate'?'checked':''}><label for="fmsep_${factor.id}" class="pill-radio">Посчитать отдельно</label><input type="radio" name="factorMode_${factor.id}" value="perSlide" id="fmps_${factor.id}" class="radio-input" ${factor.mode==='perSlide'?'checked':''}><label for="fmps_${factor.id}" class="pill-radio">Посчитать на слайд</label></div>`;
+            if(factor.mode==='separate') html+=`<div><label>Общее время: <input type="number" class="factor-sep-hours" data-id="${factor.id}" value="${factor.separateHours}" min="0" style="width:60px;"> ч <input type="number" class="factor-sep-minutes" data-id="${factor.id}" value="${factor.separateMinutes}" min="0" max="59" style="width:60px;"> мин</label><label style="margin-left:1rem;"><input type="checkbox" class="factor-distribute" data-id="${factor.id}" ${factor.distribute?'checked':''}> Распределить по слайдам</label></div>`;
+            else html+=`<div><label>Среднее время на слайд: <input type="number" class="factor-ps-hours" data-id="${factor.id}" value="${factor.perSlideHours}" min="0" style="width:60px;"> ч <input type="number" class="factor-ps-minutes" data-id="${factor.id}" value="${factor.perSlideMinutes}" min="0" max="59" style="width:60px;"> мин</label></div>`;
+            html+=`</div>`;
+        });
+        html+=`<button class="btn btn-outline" id="addFactorBtn" style="margin-top:0.5rem;">➕ Добавить фактор</button>`;
+        timeCalcContent.innerHTML=html;
+        document.querySelectorAll('.special-name-input').forEach(inp=>{ inp.addEventListener('input',function(){ const idx=parseInt(this.dataset.index); appState.screen2.specialInputs[idx].name=this.value||'Особый слайд'; }); });
+        document.querySelectorAll('.special-hours, .special-minutes').forEach(inp=>{ inp.addEventListener('input',function(){ const idx=parseInt(this.dataset.index); const h=parseInt(document.querySelector(`.special-hours[data-index="${idx}"]`).value)||0; const m=parseInt(document.querySelector(`.special-minutes[data-index="${idx}"]`).value)||0; appState.screen2.specialInputs[idx].hours=h; appState.screen2.specialInputs[idx].minutes=m; renderScreen2(); }); });
+        document.querySelectorAll('.factor-name-input').forEach(inp=>inp.addEventListener('input',function(){ const id=parseInt(this.dataset.id); const f=appState.screen2.factors.find(f=>f.id===id); if(f) f.name=this.value||'Без названия'; }));
+        document.querySelectorAll('input[type="radio"][name^="factorMode_"]').forEach(r=>r.addEventListener('change',function(){ const id=parseInt(this.name.split('_')[1]); const f=appState.screen2.factors.find(f=>f.id===id); if(f){ f.mode=this.value; renderScreen2(); } }));
+        document.querySelectorAll('.factor-sep-hours, .factor-sep-minutes').forEach(inp=>inp.addEventListener('input',function(){ const id=parseInt(this.dataset.id); const f=appState.screen2.factors.find(f=>f.id===id); if(f){ f.separateHours=parseInt(document.querySelector(`.factor-sep-hours[data-id="${id}"]`).value)||0; f.separateMinutes=parseInt(document.querySelector(`.factor-sep-minutes[data-id="${id}"]`).value)||0; renderScreen2(); } }));
+        document.querySelectorAll('.factor-distribute').forEach(chk=>chk.addEventListener('change',function(){ const id=parseInt(this.dataset.id); const f=appState.screen2.factors.find(f=>f.id===id); if(f){ f.distribute=this.checked; renderScreen2(); } }));
+        document.querySelectorAll('.factor-ps-hours, .factor-ps-minutes').forEach(inp=>inp.addEventListener('input',function(){ const id=parseInt(this.dataset.id); const f=appState.screen2.factors.find(f=>f.id===id); if(f){ f.perSlideHours=parseInt(document.querySelector(`.factor-ps-hours[data-id="${id}"]`).value)||0; f.perSlideMinutes=parseInt(document.querySelector(`.factor-ps-minutes[data-id="${id}"]`).value)||0; renderScreen2(); } }));
+        document.getElementById('addFactorBtn').addEventListener('click',()=>{ const newId=appState.screen2.factorIdCounter++; appState.screen2.factors.push({id:newId, name:`Фактор ${newId}`, mode:'separate', separateHours:0, separateMinutes:0, distribute:false, perSlideHours:0, perSlideMinutes:0}); renderScreen2(); });
+    }
+
+    function escapeHtml(text) { return String(text).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]); }
+
+    function generateReportText() {
+        const A=appState.screen2.simpleTotal, B=appState.screen2.mediumTotal, C=appState.screen2.complexTotal;
+        const specialInputs=appState.screen2.specialInputs, factors=appState.screen2.factors;
+        let X_total=0; const separateLines=[];
+        factors.forEach(factor=>{
+            if(factor.mode==='separate' && !factor.distribute){ const mins=factor.separateHours*60+factor.separateMinutes; if(mins>0) separateLines.push({name:factor.name, minutes:mins}); }
+            else { let T_f=0; if(factor.mode==='separate' && factor.distribute) T_f=factor.separateHours*60+factor.separateMinutes; else if(factor.mode==='perSlide') T_f=(A+B+C)*(factor.perSlideHours*60+factor.perSlideMinutes); if(T_f>0){ const denom=A+1.5*B+2*C; if(denom>0) X_total+=T_f/denom; } }
+        });
+        const simpleNorm=30+X_total, mediumNorm=45+1.5*X_total, complexNorm=60+2*X_total;
+        const simpleTime=Math.round(A*simpleNorm), mediumTime=Math.round(B*mediumNorm), complexTime=Math.round(C*complexNorm);
+        let specialTotal=0; specialInputs.forEach(s=>specialTotal+=s.hours*60+s.minutes);
+        const separateTotal=separateLines.reduce((s,l)=>s+l.minutes,0), totalTime=simpleTime+mediumTime+complexTime+specialTotal+separateTotal;
+        let report='';
+        if(A>0) report += `Простые слайды: ${A} × (${formatTimeShort(Math.round(simpleNorm))}) = ${formatTimeShort(simpleTime)}\n`;
+        if(B>0) report += `Средние слайды: ${B} × (${formatTimeShort(Math.round(mediumNorm))}) = ${formatTimeShort(mediumTime)}\n`;
+        if(C>0) report += `Сложные слайды: ${C} × (${formatTimeShort(Math.round(complexNorm))}) = ${formatTimeShort(complexTime)}\n`;
+        if(specialInputs.length>0){ report += `Особые слайды:\n`; specialInputs.forEach(sp=> report += `${sp.name} — ${formatTimeShort(sp.hours*60+sp.minutes)}\n`); }
+        const activeFactors = factors.filter(f=>{ const mins = f.mode==='separate'&&!f.distribute ? (f.separateHours*60+f.separateMinutes) : (f.mode==='separate'? f.separateHours*60+f.separateMinutes : (f.perSlideHours*60+f.perSlideMinutes)); return mins>0; });
+        if(activeFactors.length>0){ report += `Дополнительные факторы:\n`; activeFactors.forEach((f,i)=>{ if(f.mode==='separate' && !f.distribute) report += `${i+1}. ${f.name} — ${formatTimeShort(f.separateHours*60+f.separateMinutes)}\n`; else report += `${i+1}. ${f.name} — учтено в средних затратах времени на слайд каждого типа\n`; }); }
+        report += `\nИТОГО: ${formatTimeShort(totalTime)}`;
+        return report;
+    }
+
+    generateReportBtn.addEventListener('click',()=>{ reportText.textContent=generateReportText(); reportModal.classList.remove('hidden'); });
+    closeReportBtn.addEventListener('click',()=>reportModal.classList.add('hidden'));
+    backBtn.addEventListener('click',()=>{ screen2.classList.add('hidden'); screen1.classList.remove('hidden'); });
+    resetAppBtn.addEventListener('click', ()=>{ resetModal.classList.remove('hidden'); });
+    closeResetModal.addEventListener('click', ()=>{ resetModal.classList.add('hidden'); });
+    confirmResetBtn.addEventListener('click', ()=>{
+        appState.slides = []; appState.nextId = 1; appState.currentResult = null; appState.editingSlideId = null; appState.slideToDelete = null;
+        appState.screen2 = { simpleTotal: 0, mediumTotal: 0, complexTotal: 0, specialInputs: [], factors: [{ id:1, name:'Поиск и анализ информации', mode:'separate', separateHours:0, separateMinutes:0, distribute:false, perSlideHours:0, perSlideMinutes:0 }], factorIdCounter: 2 };
+        resetModal.classList.add('hidden'); screen2.classList.add('hidden'); screen1.classList.remove('hidden');
+        updateCounters(); renderSlideList(); resetCurrentForm();
+    });
+
+    helpBtn.addEventListener('click', ()=>{ helpModal.classList.remove('hidden'); });
+    closeHelpModal.addEventListener('click', ()=>{ helpModal.classList.add('hidden'); });
+
+    document.querySelectorAll('input[name="viewCount"], input[name="animation"], input[name="mechanics"]').forEach(r=>r.addEventListener('change',updateVisibility));
+    exactCountInput.addEventListener('input',()=>{ adjustMaxValues(); validateForm(); });
+    [simpleAnimInput,complexAnimInput,simpleMechInput].forEach(i=>i.addEventListener('input',validateForm));
+    applyTheme(); updateVisibility(); updateCounters(); renderSlideList();
+})();
+</script>
+</body>
+</html>
